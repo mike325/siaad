@@ -1,7 +1,6 @@
 bzr==2.7.0
 dj-database-url==0.4.1
 Django==1.9.7
-gufw==15.10.0
 gunicorn==19.6.0
 louis==2.6.5
 mutagen==1.31

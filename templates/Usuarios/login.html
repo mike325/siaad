@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>SIIAD - Iniciar Sesion en el Sistema</title>
+
+    {% load staticfiles %}
+    <!-- ESTILOS -->
+    <link rel="stylesheet" href="{% static 'css/foundation.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/foundationEdit.css' %}">
+
+    <!-- SCRIPTS -->
+    <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/modernizr.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/foundation.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/css_browser.js' %}"></script>
+
+    <style type="text/css">
+        /* Estilos para las cajas de login */
+        .panel-container
+        {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.07);
+            -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.07);
+            -moz-box-shadow:    0 0 10px rgba(0, 0, 0, 0.07);
+            
+            padding-bottom: 0;
+        }
+
+        .panel-container .login-logo
+        {
+            display: block; 
+                width: 100%; 
+                height: 122px; 
+
+            background-repeat: no-repeat; 
+            background-position: center; 
+            background-size: contain;
+        }
+
+        /* Estilos para advertencias y sugerencias */
+        .incompatible-nav-warn 
+        {
+            display: none;
+            font-size: 12px;
+            background-color: #F56660 !important;
+
+            width: 325px;
+
+            position: absolute;
+                right: 12px;
+                bottom: 12px;
+        }
+
+        .incompatible-nav-warn a
+        {
+            color: #FFF983;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        .chrome-sug
+        {
+            line-height: 1.1;
+            font-size: 12px;
+            overflow: hidden;
+            padding: 15px 10px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .chrome-sug div.container
+        {
+            width: 100%;
+            height: 64px;
+            background-image: url('{% static "img/chrome_flat.png" %}');
+            background-repeat: no-repeat;
+            background-position: left;
+            margin-right: 20px !important;
+            padding-left: 76px !important;
+            padding-top: 8px;
+        }
+
+        .ie .incompatible-nav-warn { display: block; }
+        .webkit .panel-container { padding-bottom: 1.25rem; }
+        .webkit .chrome-sug { display: none; }
+    </style>
+</head>
+
+<!--[if IE]><body class="ie no-js"><![endif]-->
+<!--[if !IE]><!-->
+<body><!--<![endif]-->
+    <div class="row">
+        <div class="large-4 columns large-centered">
+            <div class="panel panel-container">
+                <div class="login-logo" style="background-image: url('{% static 'img/SIIAD-logo.png' %}'); "></div> 
+
+                {% if errors %}
+                    <div class="alert-box alert radius font-small">{{errors}}</div>
+                {% endif %}
+                {% if info %}
+                    <div class="alert-box info radius font-small">{{info}}</div>
+                {% endif %}
+
+                <form method="POST" action="/">{% csrf_token %}
+                    <label for="nick">Codigo o Usuario: </label><input type="text" name="username" id="nick"></input>
+                    <label for="pass">Contraseña: </label><input type="password" name="pass" id="pass"></input>
+                    <button style="width: 100% !important;" class="button radius" type="submit">Ingresar</button>
+                </form>
+
+                <div class="text-justify no-margin chrome-sug">
+                    <div class="no-margin container">Este sitio esta diseñado para funcionar correctamente en Chrome y otros navegadores webkit.</div> 
+                </div>
+
+                <script type="text/javascript">
+                    $( document ).ready(function()
+                    {
+                        $('input#nick').focus();
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert-box error radius text-justify incompatible-nav-warn">
+        Esta usando un navegador incompatible con este sistema.
+        Varias funciones del sitio podrian no llevarse a cabo con normalidad.
+        <br/><br/>Por favor, considere esto antes de continuar o <br/>
+        <a href="https://www.google.com/chrome" target="_blank">Descargue un navegador compatible.</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,64 @@
+{% extends 'Forms/base.html' %}
+
+{% block title %}
+	Nuevo Profesor
+{% endblock %}
+
+{% block poshead %}
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			$('form :input:enabled:visible:first').focus();
+		});
+	</script>
+{% endblock %}
+
+{% block formulario %}
+	<form action="{{ request.path }}" method="POST">{% csrf_token %}
+		<h3 class="text-center">Nuevo Profesor</h3>
+		<div class="row">
+			<div class="columns">
+			{% if errores %}
+				<div class="alert-box alert radius"><ul class="white-font no-margin-bot">
+					{% for error in errores %}
+						<li class="white-font font-small"><b>{{ error.tipo }}</b>: {{ error.desc }}</li>
+					{% endfor %}
+				</ul></div>
+			{% elif success %}
+				<div class="alert-box success radius">
+					Se ha creado el profesor <br/>
+					{{ nuevo_prof.apellido }}, {{ nuevo_prof.nombre }} ({{ nuevo_prof.codigo_udg }})
+				</div>
+			{% else %}
+				<div class="alert-box info radius radius">
+					Introduzca los campos a continuación para crear un profesor en el sistema.
+					<br/>(Esto no creara una cuenta en el sistema)
+				</div>
+			{% endif %}
+			</div>
+		</div>
+		<div class="row">
+			<div class="columns">
+				<label>Codigo UDG</label>
+					<input name="in-codigo-udg" type="text" pattern="\d{1,9}" maxlength="9" required>
+			</div>
+		</div>
+		<div class="row">
+			<div class="columns">
+				<label>Apellidos</label>
+					<input name="in-apellido" type="text" maxlength="50" required>
+			</div>
+		</div>
+		<div class="row">
+			<div class="columns">
+				<label>Nombre(s)</label>
+					<input name="in-nombre" type="text" maxlength="50" required>
+			</div>
+		</div>
+		<div class="row">
+			<div class="columns">
+				<button class="button expand radius" type="submit">Registrar</button>
+			</div>
+		</div>
+	</form>
+{% endblock %}

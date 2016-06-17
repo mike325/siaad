@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Reporte de Incidencias
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="medium-10 columns medium-centered panel">
+            <div class="row">
+                <div class="medium-12 columns">
+                    <div class="alert-box secondary radius">
+                        <h3 class="text-center title">{{ accion }}</h3>
+                    </div>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="medium-7 columns medium-centered">
+                    <div class="row">
+                        <div class="medium-6 columns left">
+                            <button type="button" class="button expand radius" onclick="window.history.back()">Regresar a la pagina anterior</button>
+                        </div>
+                        <div class="medium-6 columns left">
+                            <button type="button" class="button success expand radius" onclick="location.href='/'">Ir al panel de inicio</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

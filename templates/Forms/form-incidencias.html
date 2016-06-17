@@ -1,0 +1,69 @@
+{% extends 'Forms/base.html' %}
+
+{% block title %}
+    Formulario de Incidencias
+{% endblock %}
+
+{% block poshead %}
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/plugins/bootstrap-datepicker.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/plugins/jquery.timepicker.css' %}">
+
+    <script type="text/javascript" src="{% static 'js/datetime/bootstrap-datepicker.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datetime/bootstrap-datepicker.es.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datetime/datepair.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datetime/jquery.datepair.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datetime/jquery.timepicker.min.js' %}"></script>
+    <script>
+        $(document).ready(function()
+        {
+            $('.date').datepicker(
+            {
+                    'format': 'yyyy-mm-dd',
+                    'autoclose': true,
+                    'language': 'es'
+            });
+
+            /*
+                NOTA: Javascript no puede llamar a 2 objetos con el mismo id.
+
+                FIX:
+                    + Los elementos de datepair() deben de tener un id o clase en comun
+                      dentro del DOM y ambos campos encontrarse dentro del mismo.
+                    + Actualizado el codigo de rango de fecha a la funcion jQuery.
+            */
+            $('.rango-fechas').datepair();
+        });
+    </script>
+{% endblock %}
+
+{% block formulario %}
+    <h4 class="text-center">Reportes de Incidencias</h4>
+    <form action="/computacion/ver-incidencias" method="post">{% csrf_token %}
+        <div class="row rango-fechas">
+            <div class="medium-6 columns">
+                <label>
+                    Fecha de inicio
+                    <input type="text" id="fecha" class="error date start" name="fechaIni" placeholder="Buscar por fecha (YYYY-MM-DD)" required/>
+                </label>
+                {% if 'Inicio' in errores %}
+                <small class="error">Fecha invalida</small>
+                {% endif %}
+            </div>
+            <div class="medium-6 columns">
+                <label>
+                    Fecha fin
+                    <input type="text" id="fecha" class="error date end" name="fechaFin" placeholder="Buscar por fecha (YYYY-MM-DD)" required/>
+                </label>
+                {% if 'Fin' in errores %}
+                <small class="error">Fecha invalida</small>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="medium-12 columns">
+                <br><input type="submit" value="Generar reporte" class="button tiny">
+            </div>
+        </div>
+    </form>
+{% endblock %}

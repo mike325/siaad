@@ -1,0 +1,182 @@
+{% extends 'Forms/base.html' %}
+
+{% block title %}
+    Reporte de Incidencias
+{% endblock %}
+
+{% block poshead %}
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/plugins/bootstrap-datepicker.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/plugins/jquery.timepicker.css' %}">
+
+    <script type="text/javascript" src="{% static 'js/datetime/bootstrap-datepicker.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datetime/bootstrap-datepicker.es.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datetime/datepair.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datetime/jquery.datepair.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datetime/jquery.timepicker.min.js' %}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function()
+        {
+            $('.date').datepicker(
+            {
+                'format': 'yyyy-mm-dd',
+                'autoclose': true,
+                'language': 'es'
+            });
+
+            /* FIX:
+                + Ahora se redimensiona el textarea segun la entrada.
+            */
+            var heightLimit = 200;
+            $('#comentario').on('input', function() 
+            {
+                this.style.height = "";
+                this.style.height = Math.min(this.scrollHeight, heightLimit) + 4 + "px";
+            });
+        });
+
+        // var dias = [
+        //     {'L': 'Lunes'},
+        //     {'M': 'Martes'},
+        //     {'I': 'Miercoles'},
+        //     {'J': 'Jueves'},
+        //     {'V': 'Viernes'},
+        //     {'S': 'Sabado'}
+        // ];
+
+        var materias = { 
+            {% for profe in profesores %} 
+            '{{ profe.codigo_udg }}': 
+            [
+                {% with profe.curso_set.all as cursos_profesor %} 
+                {% for curso in cursos_profesor %} 
+                    {% if curso in lista_cursos %} 
+                    {
+                        'id_curso': {{ curso.NRC }}, 
+                        'id_materia': '{{ curso.fk_materia.clave }}', 
+                        'nombre_materia': '{{ curso.fk_materia.nombre }}', 
+                        'seccion': '{{ curso.fk_secc }}', 
+                        'horarios': 
+                        [
+                            {% with curso.fk_horarios.all as horarios_curso %}
+                            {% for horario in horarios_curso %}
+                            {
+                                'hora': '{{ horario.hora_ini }}-{{ horario.hora_fin }}',
+                                'dias': '{{ horario.get_dias }}'
+                            }{% if not forloop.last %},{% endif %}
+                            {% endfor %}
+                            {% endwith %}
+                        ]
+                    }{% if not forloop.last %},{% endif %} 
+                    {% endif %} 
+                {% endfor %}
+                {% endwith %} 
+            ]{% if not forloop.last %},{% endif %} 
+            {% endfor %} 
+        };
+
+        function filtra_horarios(ref)
+        {
+            console.log($('#codigo').get(0).options[this.selectedIndex]);
+            //sel_listaHorario = $('#horarios');
+        }
+
+        function filtra_materias(ref)
+        {
+            sel_listaMat = $('#curso');
+            sel_listaMat.empty();
+
+            sel_listaHorario = $('#horarios');
+            sel_listaHorario.empty();
+
+            seleccionada = ref.options[ref.selectedIndex];
+            // console.log(seleccionada); // DEBUG
+
+            $(materias[ seleccionada.value ]).each(function() 
+            {
+                node = document.createElement('option');
+                node.value = this.id_curso;
+                node.innerHTML = this.id_curso + ' | ' + this.id_materia + ' | ' + this.nombre_materia + ' | ' + this.seccion;
+
+                for (var i = 0; i < this.horarios.length; i++) 
+                {
+                    horario = document.createElement('option');
+                    horario.value = seleccionada.value + '-' + this.id_curso;
+                    horario.innerHTML = this.id_curso + ' - ' + this.horarios[i].hora + ': ' + this.horarios[i].dias;
+                    sel_listaHorario.append(horario);
+                };
+
+                sel_listaMat.append(node);
+            });
+            // console.log(sel_listaMat); // DEBUG
+        }
+
+    </script>
+{% endblock %}
+
+{% block formulario %}
+    <form action="/{{ departamento.nick }}/reporte-incidencias" method="POST">{% csrf_token %}
+        <fieldset>
+            <legend>Reporte de Incidencias</legend>
+            <div class="row">
+                {% if errores %}
+                <div class="columns">
+                    <ul>
+                    {% for error in errores %}
+                        <li><b>{{ error.tipo }}</b>: {{ error.desc }}</li>
+                    {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                <div class="large-7 columns">
+                    <label>
+                        Profesor
+                        <select name="codigo" id="codigo" onchange="filtra_materias(this)">
+                            <option value="0" disabled="true" selected="true">-- SELECCIONE --</option>
+                            {% for x in profesores %}
+                            <option value="{{ x.codigo_udg }}">{{ x.apellido }}, {{ x.nombre }} ({{ x.codigo_udg }})</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                </div>
+                <div class="medium-5 columns">
+                    <label>
+                        Depto. <input type="text" name="depto" placeholder="Departamento" disabled="true" value="{{ departamento.nick|upper }}">
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="medium-8 columns">
+                    <label>
+                        NRC | Codigo Materia | Nombre Materia | Sección
+                        <select name="curso" id="curso" onchange="filtra_horarios(this)">
+                            <option value="0" disabled="true" selected="true">-- Seleccione un profesor primero --</option>
+                            <!-- Cursos -->
+                        </select>
+                    </label>
+                </div>
+                <div class="medium-4 columns">
+                    <label>Horario de incidencia</label>
+                        <select name="horario" id="horarios">
+                            <option value="0" disabled="true" selected="true">-- Seleccione un profesor --</option>
+                        </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="medium-12 columns">
+                    <label>
+                        Comentario
+                        <textarea id="comentario" name="comentario" maxlength="100" rows="2" placeholder="Motivo de la incidencia"></textarea>
+                    </label>
+                </div>
+                <div class="medium-4 columns left">
+                    <input type="submit" value="Enviar Reporte" class="button small radius">
+                </div>
+                {% comment %}
+                    FIX: Etiqueta de cerrado extra y falta de un row en el botón de submit.
+                {% endcomment %}
+            </div>
+        </fieldset>
+    </form>    
+{% endblock %}

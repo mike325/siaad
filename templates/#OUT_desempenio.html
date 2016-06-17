@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Carta de Desempeño
+{% endblock %}
+
+{% block poshead %}
+	<style type="text/css">
+		img.header-logo
+		{
+			height: 96px;
+		}
+
+		div.logo
+		{
+			margin-right: 6px;
+			padding-right: 6px; 
+			border-right: 2px solid #000; 
+		}
+
+		div.full-width-container p
+		{
+			font-size: 14px;
+		}
+		
+	</style>
+	{% load staticfiles %}
+	<link rel="stylesheet" href="{% static 'css/print/formatos.css' %}" type="text/css" media="print" />
+{% endblock %}
+
+{% block content %}
+	<div class="row">
+		<button class="button tiny hide-for-print right" style="margin-right: 16px; margin-bottom: 0;" onclick="print()">Imprimir formato</button>
+		<div class="medium-12 columns full-width-container">
+			<div class="left logo">
+				{% load staticfiles %}
+				<img class="header-logo" src="{% static 'img/udg-gray.png' %}" />
+			</div>
+			<p align="left" style="position: relative; top: 10px; line-height: 105%; font-family: serif; font-variant: small-caps;">
+				<span style="font-size: 26px; font-weight: bold;">Universidad de Guadalajara</span><br/> 
+				<span style="font-size: 18px;">Centro Universitario de Ciencias Exactas  e Ingenierias</span><br/>
+				<span style="font-size: 18px;">Division de electronica y computacion</span><br/>
+				<span style="font-size: 15px;">{{ departamento }}</span><br/>
+				<br/><br/>
+			</p>
+			<p align="right">CUCEI/DDC/DIVEC/2015</p>
+
+			</br></br>
+			<p>
+				<strong>C. {{ nombre }} ({{ codigo }})</strong></br>
+				Adscrito al {{ departamento }} </br>
+				<strong>P r e s e n t e</strong>
+			</p>
+			<p align="justify" style="text-indent: 50px;">
+					Por este medio, hago de su conocimiento que se ha hecho acreedor a la
+					Carta de Desempeño Docente con la calificacion <b>{{ calif|upper }}</b> para el ciclo escolar <b>{{ ciclo|upper }}</b>, por haber cubierto 
+					satisfactoriamente los criterios del articulo 25 fraccion VI del Reglamento de Ingreso, Promocion
+					 y Permanencia del Personal Academico de la Universidad de guadalajara, de la siguiente manera:
+			</p>
+
+			<table align="center">
+				<thead>
+					<tr>
+						<th>Criterios</th>
+						<th>Cumple</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr>
+						<td>a) el 97% de las asistencias</td>
+						<td>{{ criterios.0|title }}</td>
+					</tr>
+					<tr>
+						<td>
+							b) utilizado los apoyos didacticos estipulados en el programa del
+							curso o por el departamento o instacia equivalente
+						</td>
+						<td>{{ criterios.1|title }}</td>
+					</tr>
+					<tr>
+						<td>c) Cumplido con la totalidad de los programas de los cursos</td>
+						<td>{{ criterios.2|title }}</td>
+					</tr>
+					<tr>
+						<td>d) 80% de los alumnos aprobados en cada curso</td>
+						<td>{{ criterios.3|title }}</td>
+					</tr>
+					<tr>
+						<td>e) Asistido al 100% de los trabajos colegiados</td>
+						<td>{{ criterios.4|title }}</td>
+					</tr>
+					<tr>
+						<td>f) En el nivel superior, haber asesorado formalmente alumnos o dirigido a asesorias de una tesis</td>
+						<td>{{ criterios.5|title }}</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>Se extiende la presente para los efectos legales que al academico convenga</p>
+			<p align="center">
+				A T E N T A M E N T E</br>
+				<strong>"Piensa y Trabaja"</strong></br>
+				Guadalajara, Jalisco a {{ fecha }}</br></br></br>
+				<strong>{{ nombrefirma }}</strong></br>
+				{{ puesto }}
+
+			</p>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Estadisticas de {{datos.nombre}}
+{% endblock %}
+
+{% block poshead %}
+    {% load staticfiles %}
+        <script src="{% static 'js/Chart.Core.js' %}"></script>
+        <script src="{% static 'js/Chart.Doughnut.js' %}"></script>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/plugins/bootstrap-datepicker.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/plugins/jquery.timepicker.css' %}">
+        <script type="text/javascript" src="{% static 'js/datetime/bootstrap-datepicker.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/datetime/bootstrap-datepicker.es.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/datetime/datepair.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/datetime/jquery.datepair.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/datetime/jquery.timepicker.min.js' %}"></script>
+
+        <style>
+            .canvas-holder{
+                width:inherit;
+                display: inherit;
+            }
+            .pie-chart{
+                width:inherit;
+                height:400;
+            }
+        </style>
+
+        <script>
+            $(document).ready(function()
+            {
+                $('.dateOnly .date').datepicker(
+                {
+                        'format': 'yyyy-mm-dd',
+                        'autoclose': true,
+                        'language': 'es'
+                });
+            });
+
+            var pieData = [
+                {
+                    value: {{datos.asisTCompleto|length}},
+                    color:"#009ACD",
+                    highlight: "#00749a",
+                    label: "Asistencias Tiempo Completo"
+                },
+                {
+                    value: {{datos.inasisTCompleto|length}},
+                    color: "#668B8B",
+                    highlight: "#838B8B",
+                    label: "Inasistencias Tiempo Completo"
+                },
+                {
+                    value: {{datos.asisTMedio|length}},
+                    color:"#5CACEE",
+                    highlight: "#2e94e9",
+                    label: "Asistencias Medio Tiempo"
+                },
+                {
+                    value: {{datos.inasisTMedio|length}},
+                    color:"#528B8B",
+                    highlight: "#2F4F4F",
+                    label: "Inasistencias Medio Tiempo"
+                }
+            ];
+
+            window.onload = function(){
+                var ctx = document.getElementById("chart-area").getContext("2d");
+                window.myPie = new Chart(ctx).Pie(pieData);
+                window.myPie.generateLegend();
+            };
+        </script>
+{% endblock %}
+
+{% block content %}
+
+	<div class="row">
+	    <div class="large-7 large-offset-5 columns">
+	        <div class="row collapse">
+	            <div class="small-12 columns">
+	                <div class="small-12 columns">
+	                    <label>Filtrar por fecha</label>
+	                </div>
+	                <form method="POST">{% csrf_token %}
+	                    <div class="large-4 columns">
+	                        <p class="dateOnly" id="dateOnly">
+	                            <input type="text" id="fecha" class="date" name="fechaI" placeholder="Fecha inicio (YYYY-MM-DD)" required/>
+	                        </p>
+	                    </div>
+	                    <div class="large-4 columns">
+	                        <p class="dateOnly" id="dateOnly">
+	                            <input type="text" id="fecha" class="date" name="fechaF" placeholder="Fecha fin (YYYY-MM-DD)" required/>
+	                        </p>
+	                    </div>
+	                    <div class="small-4 columns">
+	                        <input type="submit" value="Buscar" class="button postfix">
+	                    </div>
+	                </form>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+
+	<div class="row">
+		<div class="large-12 medium-10 columns medium-centered">
+			<div class="panel">
+				<h3 class="text-center">Estadísticas de asistencias de: {{datos.nombre}}</h3>
+				<div class="row">
+                    {% if datos.fechaI %}
+                        <div>
+                            <h5 class="text-center">De la fecha {{datos.fechaI}} a {{datos.fechaF}}</h5>
+                        </div>
+                    {% endif %}
+					{% if not datos.asisTotales %}
+						<div class="alert-box alert radius text-center">No existen registros de este profesor o en ese rango de fechas</div>
+					{% else %}
+					<div class="large-4 medium-8 columns">
+						<div class="canvas-holder">
+							<canvas id="chart-area" widht="100%" height="350" align="center"/>
+						</div>
+					</div>
+					<div class="large-8 medium-4 columns">
+						<table>
+							<thead>
+								<th>Tipo</th>
+								<th>Tipo Contrato</th>
+								<th>Materia</th>
+								<th>Sección</th>
+								<th>Asistencias</th>
+								<th>Inasistencias</th>
+								<th>Totales</th>
+							</thead>
+							<tbody>
+								{% for key, value in tablaTCompleto.items %}
+									<tr>
+									<td>Tiempo Completo</td>
+									<td>{{value.tipoContrato}}</td>
+									<td>{{value.nombre}}</td>
+									<td>{{value.secc}}</td>
+									<td>{{value.asist}}</td>
+									<td>{{value.inasist}}</td>
+									<td>{{value.total}}</td>
+									</tr>
+								{% endfor %}
+								{% for key, value in tablaTMedio.items %}
+									<tr>
+									<td>Medio Tiempo</td>
+									<td>{{value.tipoContrato}}</td>
+									<td>{{value.nombre}}</td>
+									<td>{{value.secc}}</td>
+									<td>{{value.asist}}</td>
+									<td>{{value.inasist}}</td>
+									<td>{{value.total}}</td>
+									</tr>
+								{% endfor %}
+								
+							</tbody>
+						</table>
+					</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

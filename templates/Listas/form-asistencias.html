@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	
+	Reporte de Asistencias 
+
+{% endblock %}
+
+{% block poshead %}
+<style type="text/css">
+	img.header-logo
+	{
+		height: 96px;
+	}
+
+	div.logo
+	{
+		margin-right: 6px;
+		padding-right: 6px; 
+		border-right: 2px solid #000; 
+	}
+
+	div.full-width-container p
+	{
+		font-size: 14px;
+	}
+	
+</style>
+{% load staticfiles %}
+<link rel="stylesheet" href="{% static 'css/print/formatos.css' %}" type="text/css" media="print" />
+{% endblock %}
+
+{% block content %}
+	<div class="row">
+		<button class="button tiny hide-for-print right" style="margin-right: 16px; margin-bottom: 0;" onclick="print()">Imprimir formato</button>
+		<div class="medium-12 columns full-width-container">
+			<div class="left logo">
+				{% load staticfiles %}
+				<img class="header-logo" src="{% static 'img/udg-gray.png' %}" />
+			</div>
+			<p align="left" style="position: relative; top: 10px; line-height: 105%; font-family: serif; font-variant: small-caps;">
+				<span style="font-size: 26px; font-weight: bold;">Universidad de Guadalajara</span><br/> 
+				<span style="font-size: 18px;">Centro Universitario de Ciencias Exactas  e Ingenierias</span><br/>
+				<span style="font-size: 18px;">Division de electronica y computacion</span><br/>
+				<span style="font-size: 15px;">{{ departamento }}</span><br/>
+				<br/><br/>
+			</p>
+			<p align="right">CUCEI/DDC/DIVEC/2015</p>
+
+			</br></br>
+			<p>
+				<strong> C. Lic. Virginia Del Carmen Hernández </strong>
+				</br>Coordinadora de Personal del CUCEI</br>
+				</br>Presente.- </br>
+			</p>
+			<p style="text-align: justify;"  style="text-indent: 50px;">
+						Por este medio adjunto al presente, el reporte de asistencias de los profesores adscritos a este departamento, correspondiente a la semana del {{dia}} al {{dia2}} de {{mes}} del {{ano}}.
+			</p>
+
+			<p>Sin otro particular, le envío un cordial saludo</p>
+
+			<br><br><br><br><br><br><br><br><br><br><br><br>
+
+			<p align="center">
+				A T E N T A M E N T E
+				</br><strong>"Piensa y Trabaja"</strong></br>
+				Guadalajara, Jalisco a {{ fecha }}</br></br></br>
+				<strong>{{ nombrefirma }}</strong></br>
+				{{ puesto }}
+
+			</p>
+		</div>
+	</div>
+{% endblock %}

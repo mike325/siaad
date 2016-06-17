@@ -1,0 +1,156 @@
+{% if ajax %}
+	{% load staticfiles %}
+	{# estilos y scripts para autocompletado #}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/plugins/autocomplete.css' %}">
+	<script type="text/javascript" src="{% static 'js/autocomplete.js' %}"></script>
+
+	{# estilos y scripts para selector de fecha de bootstrap (dude, this is foundation) #}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/plugins/bootstrap-datepicker.css' %}">
+    <script type="text/javascript" src="{% static 'js/datetime/bootstrap-datepicker.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datetime/bootstrap-datepicker.es.js' %}"></script>
+
+    {# estilos y scripts para el selector de hora #}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/plugins/jquery.timepicker.css' %}">
+	<script type="text/javascript" src="{% static 'js/datetime/jquery.timepicker.min.js' %}"></script>
+
+	{# scripts para rango de fecha y hora #}
+	<script type="text/javascript" src="{% static 'js/datetime/datepair.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/datetime/jquery.datepair.min.js' %}"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+		{% if area = 'suplentes' %}
+			$('#in-full-periodo').change(function()
+			{
+				if ( this.checked == true )
+				{
+					$('.rango-fecha > input').attr("disabled", true);
+				}
+				else
+				{
+					$('.rango-fecha > input').removeAttr("disabled");
+				}
+			});
+
+			$('#in-supp').autocomplete(
+			{
+			    lookup: [
+			    {% for profe in lista_profesores %}
+			    	{'value': "{{ profe.apellido }}, {{ profe.nombre }}", 'data': '{{ profe.codigo_udg }}'}{% if not forloop.last %},{% endif %}{% endfor %}
+			    ],
+			    onSelect: function (suggestion) 
+			    {
+			        $('#in-codigo').val(suggestion.data);
+			        //alert($('#in-codigo').val());
+			    },
+			    minChars: 3,
+			    lookupLimit: 10,
+			    triggerSelectOnValidInput: true,
+			    autoSelectFirst: true
+			});
+
+			$(document).on('close.fndtn.reveal', '[data-reveal]', function() 
+			{
+  				$('#in-supp').autocomplete().hide();
+  				$('.autocomplete-suggestions').remove();
+			});
+
+			$('.date').datepicker(
+            {
+				'format': 'yyyy-mm-dd',
+				'autoclose': true,
+				'language': 'es'
+            });
+
+            $('form').datepair();
+        {% elif area == 'ciclos' %}
+			$('.date').datepicker(
+            {
+				'format': 'yyyy-mm-dd',
+				'autoclose': true,
+				'language': 'es'
+            });
+
+            $('form').datepair();
+		{% endif %}
+		});
+
+		function EnviarFormulario(ref)
+		{
+			button = document.getElementById('button-send-form');
+			button.disabled = true;
+
+			div_info = document.getElementById('status-div');
+			$.ajax({
+				url: ref.action,
+				method: 'POST',
+				data: $(ref).serialize()
+			})
+			.done(function(data)
+			{
+				$(div_info).addClass('success').text(data).slideDown(function()
+				{
+					setTimeout(function()
+					{
+						$('a.close-reveal-modal').trigger('click');
+					}, 1700);
+				});
+			})
+			.error(function(data)
+			{
+				$(div_info).addClass('error').text(data).slideDown();
+				button.disabled = false;
+			});
+
+			return false;
+		}
+	</script>
+	<div class="row">
+			<div class="small-12 columns">
+				<h2 class="text-center" style="margin-bottom: 20px;">Modificar {{ area|title }}</h2>
+				<form action="{{ request.path }}" onsubmit="return EnviarFormulario(this)">{% csrf_token %}
+					<div class="row">
+						{% for campo in campos %}
+						<div class="medium-{{ campo.size }} columns{% if campo.rootclass %} {{ campo.rootclass }}{% endif %}" {% if campo.rootstyle %}style="{{ campo.rootstyle }}"{% endif %}>
+							{% if campo.label %}
+								<label>{{ campo.label }}</label>
+							{% endif %}
+								<input type="{% spaceless %}
+									{% if campo.type %}
+										{{ campo.type }}
+									{% else %}
+										text
+									{% endif %}
+								{% endspaceless %}" id="{{ campo.id }}" {% if not campo.send = False %}name="{{ campo.id }}"{% endif %} {% if campo.disable %}disabled{% endif %} {% if campo.prop = 'date' %} value="{{ campo.value|date:"Y-m-d" }}"{% else %} value="{{ campo.value }}"{% endif %} {% if campo.class %}class="{{ campo.class }}"{% endif %} {% if campo.max_length %}maxlength="{{ campo.max_length }}"{% endif %} {% if not campo.send = False and not campo.type = 'checkbox' %}required{% endif %}>
+							{% if campo.checklabel %}
+								<label for="{{ campo.id }}">{{ campo.checklabel }}</label>
+							{% endif %}
+						</div>
+						{% endfor %}
+					</div>
+					<div class="row">
+						<div class="medium-12 columns">
+							<div class="alert-box radius text-center" id="status-div" style="display: none; padding: 15px 10px;"></div>
+						</div>
+					</div>
+					<hr/>
+					<div class="row">
+						<div class="medium-5 columns right">
+							<div class="row collapse">
+								<div class="medium-6 columns">
+									<button type="submit" id="button-send-form" class="button success expand">Guardar cambios</button>
+								</div>
+
+								<div class="medium-6 columns">
+									<a class="button alert expand" onclick="$('a.close-reveal-modal').trigger('click');">Cancelar</a>
+								</div>
+
+								<a class="close-reveal-modal" style="display: none !important;">X</a>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+	</div>
+{% endif %}

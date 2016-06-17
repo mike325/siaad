@@ -1,0 +1,57 @@
+{% if problemas %}	
+	<div class="medium-12 columns advertencias-sistema">
+		<div class="alert-box warning radius" style="margin: 0; margin-top: 14px;">
+			<h3 style="color: #FFE682;">Advertencia</h3>
+			<ul>
+				{% if not hayDeptos %}
+				<li>
+					<div class="warn">
+							<b>No se ha creado ningún departamento.</b><br/>
+						El administrador del sitio debe de crear un departamento antes de poder usar el sistema. Para ello, puede dirigirse rapidamente a <br/>
+						<code>Administrador > Crear Nuevo Departamento</code>
+					</div>
+				</li>
+				{% endif %}
+				{% if not hayCiclos %}
+				<li>
+					<div class="warn">
+							<b>No se ha registrado ningún ciclo escolar.</b><br/>
+						Si ud es el Jefe de Departamento o Administrador, por favor, dirijase al apartado<br/>
+						<code>Jefe de Departamento > Nuevo Ciclo</code>
+					</div>
+				</li>
+				{% endif %}
+				{% if not hayCursos %}
+				<li>
+					<div class="warn">
+							<b>No existen cursos registrados en el sistema.</b><br/>
+						Si ud es el Jefe de Departamento o Administrador, por favor, suba el archivo CSV con la información de los cursos. La ruta correspondiente es <br/>
+						<code>Jefe de Departamento > (departamento) > Subir CSV Cursos</code>
+					</div>
+				</li>
+				{% endif %}
+				{% if not cicloVigente %}
+				<li>
+					<div class="warn">
+							<b>No existen ciclos vigentes a la fecha.</b><br/>
+						Por favor, tome en cuenta que algunas de las funciones de este sitio (como por ejemplo aquellas relacionadas a los cursos)<br/>
+						<b>funcionan bajo el ultimo ciclo vigente registrado</b>.<br/><br/>
+						Si ud es el Jefe de Departamento o Administrador y desea registrar un nuevo ciclo, dirijase a:<br/>
+						<code>Jefe de Departamento > Nuevo Ciclo</code>
+					</div>
+				</li>
+				{% endif %}
+				{% if not hayContratos %}
+				<li>
+					<div class="warn">
+							<b>No se ha subido ningun contrato.</b><br/>
+						Las listas de asistencia, así como otras partes relacionadas como las estadísticas requieren de la existencia de un contrato para su funcionamiento. <br/><br/>
+						Si ud es el Jefe de Departamento o Administrador, por favor suba el archivo csv con los contratos correspondientes en:<br/>
+						<code>Jefe de Departamento > (departamento) > Subir CSV Contratos</code>
+					</div>
+				</li>
+				{% endif %}
+			</ul>
+		</div>
+	</div>
+{% endif %}

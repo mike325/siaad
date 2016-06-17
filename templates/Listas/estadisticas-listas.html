@@ -1,0 +1,37 @@
+{% extends 'Forms/base.html' %}
+
+{% block title %}
+    Estadisticas - {{objetos}}
+{% endblock %}
+
+{% block formulario %}
+    <h4 class="text-center">Lista de {{objetos}}</h4>
+    {% if objetos == 'Materias' %}
+        <form action="/estadisticas-materia">
+            <select name="materia" onchange="redirigeUrl(this)">
+            {% for materia in lista_materias %}
+                    <option value='{{materia.clave}}'>{{materia.nombre}} ({{materia.clave}})</option>
+            {% endfor %}
+            </select>
+            <input type="submit" class="button expand">
+        </form>
+    {% elif objetos == 'Profesores' %}
+        <form action="/estadisticas-profesor">
+            <select name="profesor" onchange="redirigeUrl(this)">
+            {% for profesor in lista_profesores %}
+                    <option value='{{profesor.codigo_udg}}'>{{profesor.apellido}}, {{profesor.nombre}} ({{profesor.codigo_udg}})</option>
+            {% endfor %}
+            </select>
+            <input type="submit" class="button expand">
+        </form>
+    {% elif objetos == 'Ciclos' %}
+        <form action="/estadisticas-ciclo">
+            <select name="ciclo" onchange="redirigeUrl(this)">
+            {% for ciclo in lista_ciclos %}
+                    <option value='{{ciclo.id}}'>{{ciclo.id}} ({{ciclo.fecha_ini}} al {{ciclo.fecha_fin}})</option>
+            {% endfor %}
+            </select>
+            <input type="submit" class="button expand">
+        </form>
+    {% endif %}
+{% endblock %}

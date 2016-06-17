@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>{% spaceless %}{% block title %}{% endblock %}{% endspaceless %}</title>
+
+    {% block prehead %}{% endblock %}{% comment %}
+        'prehead' permite agregar cualquier elemento (script, css, etc) 
+        al head ANTES que cualquier otro.
+    {% endcomment %}
+
+    {% load staticfiles %}
+    <!-- ESTILOS -->
+    <link rel="stylesheet" href="{% static 'css/foundation.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/foundationEdit.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fix-sidebar.css' %}">
+
+    <!-- SCRIPTS -->
+    <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/modernizr.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/foundation.min.js' %}"></script>
+
+    {% block poshead %}{% endblock %}{% comment %}
+        'poshead' permite agregar cualquier elemento (script, css, etc) 
+        al head DESPUES de que se han cargado todos los demas. Util para cargar
+        plugins de jQuery o CSS que deben de aplicarse encima de cualquier otro
+    {% endcomment %}
+</head>
+
+<body>
+    <!-- Top bar -->
+    {% include 'modulos/navbar.html' %}
+
+    <div id="container">
+        <div class="row full-width">
+
+            <!-- Contenido del panel de la izquierda, por orden jerárquico de menor a mayor -->
+            {% include 'modulos/sidebar.html' %}
+
+            <!-- Contenido del area principal, un recuadro por departamento con sus botones correspondientes -->
+            <div class="large-10 columns">
+                {% if banner %}
+                <!-- Banner, por el momento una imagen cualquiera -->
+                <div class="large-12 columns no-padding no-margin main-banner" style="background-image: url('{% static 'img/banner_loop.png' %}');">
+                    <div class="no-margin no-padding transparent-black-bg" style="width: 100%; height: 100%; border-bottom: 4px solid #2B9A99;">
+                        <h2 style="color: #FFF; position: absolute; left: 12px; bottom: 0;">Bienvenido(a), {{ request.user.first_name }}</h2>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% block content %}{% endblock %}
+            </div>          
+        </div>
+    </div>
+    {% block footer %}{% endblock %}
+    {# es importante agregar esto #}
+    <script type="text/javascript">
+        $(document).foundation();
+    </script>
+</body>
+</html>

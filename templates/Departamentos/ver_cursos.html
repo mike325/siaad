@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Listas
+{% endblock %}
+
+{% block poshead %}
+	{% load staticfiles %}
+	<script type="text/javascript">
+		$(document).ready(function() 
+		{
+			$('.button-edita-curso').click(function()
+			{
+				nodo_act = $(this).parent().parent().children('.row-nrc');
+				NRC = parseInt($(nodo_act).text());
+
+				//console.log(NRC);
+				//return false;
+
+				$.ajax(
+				{
+					url: "../modifica_curso/" + NRC + '/ajax',
+					dataType: 'html'
+				})
+				.done(function( data ) 
+				{
+					//console.log(this, data);
+					$('#modifica-materia').html(data).foundation('reveal', 'open');
+					$('html, body').delay(400).animate(
+					{
+						scrollTop: $("#modifica-materia").offset().top+100
+					}, 'fast');
+					//$(window).scrollTop();
+					//$('#modifica-materia').scrollIntoView(true);
+					//return false;
+				});
+			});
+		});
+	</script>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="medium-12 columns">	
+		<h3 class="text-center">CURSOS</h3>
+
+		{# PAGINACION >> INICIO #}
+		<ul class="pagination" role="menubar" aria-label="Pagination">
+			{% if lista_cursos.has_other_pages %}
+			{# Si hay otras paginas... #}
+				<li class="arrow">
+					<a href="{% if lista_cursos.has_previous %}?pagina={{ lista_cursos.previous_page_number }}{% else %}#{% endif %}">&laquo; Anterior</a>
+				</li>
+				
+				{% for i in lista_cursos.paginator.page_range %}
+					<li {% if lista_cursos.number = i %} class="current"{% endif %}><a href="?pagina={{ i }}">{{ i }}</a></li>
+				{% endfor %}
+
+				<li class="arrow">
+					<a href="{% if lista_cursos.has_next %}?pagina={{ lista_cursos.next_page_number }}{% else %}#{% endif %}">Siguiente &raquo;</a></li>
+				</li>
+			{% endif %}
+
+			{# Cantidad de resultados #}
+			<li><p class="no-margin no-padding" style="position: absolute; right: 0; right: 32px;">Mostrando {{ lista_cursos.start_index }}-{{ lista_cursos.end_index }} de {{ lista_cursos.paginator.count }}.</p></li>
+		</ul>
+		{# PAGINACION >> FIN #}
+
+		<table class="full-width-table" id="cursos">
+				<thead>
+					<th>#</th>
+					<th>NRC</th>
+					<th>CLAVE</th>
+					<th>MATERIA</th>
+					<th>AREA</th>
+					<th>SECCION</th>
+					<th>EDIF</th>
+					<th>AULA</th>
+					<th>PROFESOR</th>
+					<th>ACCIONES</th>
+				</thead>
+
+				<tbody>
+					{% for curso in lista_cursos %}
+					{# Para cada curso en la lista de cursos... #}
+						<tr>
+							<td class="row-n{# non-editable #}">{{ forloop.counter0|add:lista_cursos.start_index }}</td>
+							<td class="row-nrc{# non-editable #}">{{ curso.NRC }}</td>
+							<td class="row-clave{# non-editable #}">{{ curso.fk_materia.clave }}</td>
+							<td class="row-materia{# non-editable #}">{{ curso.fk_materia.nombre }}</td>
+							<td class="row-area">{{ curso.fk_area }}</td>
+							<td class="row-seccion">{{ curso.fk_secc }}</td>
+							<td class="row-edif">{% spaceless %}
+								{% for horario in curso.fk_horarios.all %}
+									{{ horario.fk_edif }}{% if not forloop.last %}<br/>{% endif %}
+								{% endfor %}
+							{% endspaceless %}</td>
+							<td class="row-aula">{% spaceless %}
+								{% for horario in curso.fk_horarios.all %}
+									{{ horario.fk_aula }}{% if not forloop.last %}<br/>{% endif %}
+								{% endfor %}
+							{% endspaceless %}</td>
+							<td class="row-profesor">{{ curso.fk_profesor }} ({{ curso.fk_profesor.codigo_udg }})</td>
+							<td class="row-actions{# non-editable #} no-padding"><a class="button-edita-curso button no-margin" {# href="#modifica-materia" #}>Editar</a></td>
+						</tr>
+					{% endfor %}
+				</tbody>
+		</table>
+
+		{# PAGINACION >> INICIO #}
+		<ul class="pagination" role="menubar" aria-label="Pagination">
+			{% if lista_cursos.has_other_pages %}
+			<li class="arrow">
+				<a href="{% if lista_cursos.has_previous %}?pagina={{ lista_cursos.previous_page_number }}{% else %}#{% endif %}">&laquo; Anterior</a>
+			</li>
+			
+			{% for i in lista_cursos.paginator.page_range %}
+				<li {% if lista_cursos.number = i %} class="current"{% endif %}><a href="?pagina={{ i }}">{{ i }}</a></li>
+			{% endfor %}
+
+			<li class="arrow">
+				<a href="{% if lista_cursos.has_next %}?pagina={{ lista_cursos.next_page_number }}{% else %}#{% endif %}">Siguiente &raquo;</a></li>
+			</li>
+			{% endif %}
+
+			<li><p class="no-margin no-padding" style="position: absolute; right: 0; right: 32px;">Mostrando {{ lista_cursos.start_index }}-{{ lista_cursos.end_index }} de {{ lista_cursos.paginator.count }}.</p></li>
+		</ul>
+		{# PAGINACION >> FIN #}
+	</div>
+</div>
+
+<div id="modifica-materia" class="reveal-modal" data-reveal aria-labelledby="modal-titulo" aria-hidden="true" role="dialog">
+	<div class="row">
+		<div class="medium-8 columns">
+			<div class="alert-box warning">
+				Ha ocurrido un error desconocido.
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

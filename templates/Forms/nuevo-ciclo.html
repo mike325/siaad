@@ -1,0 +1,83 @@
+{% extends 'Forms/base.html' %}
+
+{% block title %}
+	Nuevo Ciclo
+{% endblock %}
+
+{% block poshead %}
+	{% load staticfiles %}
+	{# estilos y scripts para selector de fecha de bootstrap (dude, this is foundation) #}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/plugins/bootstrap-datepicker.css' %}">
+    <script type="text/javascript" src="{% static 'js/datetime/bootstrap-datepicker.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datetime/bootstrap-datepicker.es.js' %}"></script>
+
+    {# estilos y scripts para el selector de hora #}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/plugins/jquery.timepicker.css' %}">
+	<script type="text/javascript" src="{% static 'js/datetime/jquery.timepicker.min.js' %}"></script>
+
+	{# scripts para rango de fecha y hora #}
+	<script type="text/javascript" src="{% static 'js/datetime/datepair.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/datetime/jquery.datepair.min.js' %}"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			$('.date').datepicker(
+            {
+				'format': 'yyyy-mm-dd',
+				'autoclose': true,
+				'language': 'es'
+            });
+
+            $('.rango-fecha').datepair();
+
+            $('form :input:enabled:visible:first').focus();
+		});
+	</script>
+{% endblock %}
+
+{% block formulario %}
+	<form action="{{ request.path }}" method="POST">{% csrf_token %}
+		<h3 class="text-center">Nuevo Ciclo</h3>
+		<div class="row">
+			<div class="columns">
+			{% if errores %}
+				<div class="alert-box alert radius" style="background-color: #F78383;"><ul class="white-font no-margin-bot">
+					{% for error in errores %}
+						<li class="font-small white-font"><b>{{ error.tipo }}</b>: {{ error.desc|safe }}</li>
+					{% endfor %}
+				</ul></div>
+			{% elif success %}
+				<div class="alert-box success radius">
+					Se ha creado el ciclo <br/>
+					{{ nuevo_ciclo.id }}: {{ nuevo_ciclo.fecha_ini }} a {{ nuevo_ciclo.fecha_fin }}
+				</div>
+			{% else %}
+				<div class="alert-box info radius radius">
+					Introduzca los campos a continuación para crear un ciclo en el sistema.
+				</div>
+			{% endif %}
+			</div>
+		</div>
+		<div class="row">
+			<div class="medium-4 columns">
+				<label>Nombre</label>
+					<input data-tooltip title="Solo numeros (0-9), guiones(-) y letras mayusculas(A-Z)" name="in-id" type="text" pattern="[\d-(A-Z)]{1,6}" maxlength="6" required>
+			</div>
+			<div class="rango-fecha">
+				<div class="medium-4 columns">
+					<label>Fecha de Inicio</label>
+						<input name="in-fecha-ini" class="date start" type="text" maxlength="50" required>
+				</div>
+				<div class="medium-4 columns">
+					<label>Fecha de Finalizacion</label>
+						<input name="in-fecha-fin" class="date end" type="text" maxlength="50" required>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="columns">
+				<button class="button expand radius" type="submit">Registrar</button>
+			</div>
+		</div>
+	</form>
+{% endblock %}

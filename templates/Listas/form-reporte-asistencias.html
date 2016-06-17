@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Reporte de Asistencia por Profesor
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="medium-5 medium-centered columns panel">
+            <form action="./form-asistencias" method="post">{% csrf_token %}
+                <h3 class="text-center">Reporte de asistencia</h2>
+                {% if error %}
+                <div data-alert="" class="alert-box warning round">
+                  Revisa bien la información.
+                  <a href="#" class="close">×</a>
+                </div>
+                {% endif %}
+                <label>Codigo profesor
+                    <input type="text" name="field-codprof">
+                </label>
+                <input type="submit" value="Generar reporte" class="button tiny radius" style="width: 100%;">
+            </form>
+        </div>
+    </div>
+{% endblock %}

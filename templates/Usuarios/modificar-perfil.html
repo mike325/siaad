@@ -1,0 +1,24 @@
+{% extends 'Forms/base.html' %}
+
+{% block title %}
+    Modificar - Perfil
+{% endblock %}
+
+{% block formulario %}	
+	{% if errors %}
+            <div class="alert-box warning radius">{{errors}}</div>
+    {% endif %}
+	<form id='formulario' method='post'>{% csrf_token %}
+		<h4 align="center">MODIFICAR PERFIL</h4>
+			<label>Nombre</label>
+			<input type="text" name="nombre" placeholder="Nombre" value = "{{ perfil.user.first_name }}" required/>
+			<label>Apellido</label>
+			<input type="text" name="apellido" placeholder="Apellido" value = "{{ perfil.user.last_name }}" required/>
+			<label>Codigo</label>
+			<input type="text" name="codigo" pattern="[0-9]{9}" maxlength="9" placeholder="Codigo" data-tooltip aria-haspopup="true" title="Código UDG, sólo números, 9 dígitos" value = "{{ perfil.codigo }}" required/>
+			<label>Correo electrónico</label>
+			<input type="email" name="correo" placeholder="Email" value = "{{ perfil.user.email }}" required/>
+		<input type="submit" value="Continuar" class="button expand"/>
+	</form>
+
+{% endblock %}

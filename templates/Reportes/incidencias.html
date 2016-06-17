@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Reporte de Incidencias
+{% endblock %}
+
+{% block poshead %}
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/print/formatos.css' %}" type="text/css" media="print" />
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="medium-12 columns">
+            <button class="button tiny hide-for-print right" onclick="print()">Imprimir formato</button>
+            <table class="full-width-table">
+                <thead class="especialHead">
+                    <th colspan="2">
+                        {% load staticfiles %}
+                        <div style="width: 100px; height: 100px;">
+                            <img src="{% static 'img/udglogo.jpg' %}">
+                        </div>
+                    </th>
+                    <th class="text-center" colspan="7">
+                        REPORTE DE INCIDENCIAS DEL PERSONAL ACADEMINCO<br>
+                        CENTRO UNIVERSITARIO DE CIENCIAS EXACTAS E INGENIERIAS<br>
+
+                        {% if extender_info %}
+                            DEL {{ fechaI.day }} DE {{ mes_ini }} DE {{ fechaI.year }}<br>
+                            AL {{ fechaF.day }} DE {{ mes_fin }} DE {{ fechaF.year }}
+                        {% else %}
+                            DEL {{ fechaI.day }} AL {{ fechaF.day }} DE {{ mes_fin }} DE {{ fechaF.year }}
+                        {% endif %}
+                    </th>
+                </thead>
+
+                <thead>
+                    <th>FECHA</th>
+                    <th>NOMBRE</th>
+                    <th>CODIGO</th>                    
+                    <th>CATEGORIA</th>
+                    <th>DEPTO.</th>
+                    <th>MATERIA</th>
+                    <th>SECC</th>
+                    <th>HORARIO</th>
+                    <th>HORAS FALTA</th>
+                </thead>
+
+                <tbody>
+                    {% with listaIncidencias as incidencias %}
+                        {% for x in incidencias %}
+                        <tr>
+                            {% with x.fk_contrato as contrato %}
+                                <td class="row-fecha">{{ x.fecha.day }}/{{ x.fecha.month }}/{{ x.fecha.year }}</td>
+                                <td class="row-nombre">{{ contrato.fk_curso.fk_profesor }}</td>
+                                <td class="row-codigo">{{ contrato.fk_curso.fk_profesor.codigo_udg }}</td>
+                                {% if contrato.tipo == 'T' %}
+                                <td class="row-categoria">Tiempo Completo({{ contrato.tipo }})</td>
+                                {% elif contrato.tipo == 'P' %}
+                                <td class="row-categoria">Medio Tiempo({{ contrato.tipo }})</td>
+                                {% elif contrato.tipo == '' %}
+                                <td class="row-categoria">Sin especificar({{ contrato.tipo }})</td>
+                                {% endif %}
+                                <td class="row-dpto">{{ x.fk_depto.nick.upper }}</td>
+                                <td class="row-materia">{{ contrato.fk_curso.fk_materia.nombre }}</td>
+                                <td class="row-secc">{{ contrato.fk_curso.fk_secc }}</td>
+
+                                <td class="row-horario">
+                                    {% comment %}
+                                        FIX:
+                                            + Optimizado para mayor cantidad de registros en un futuro.
+                                            + Nunca sabremos los horarios con los que udg puede salir...
+                                              Así que aceptamos todos los casos:
+                                                - Multiples horarios en un solo día.
+                                                - Diferentes combinaciones de días.
+                                                - Cursos cuyo horario no ha sido definido o ha sido
+                                                  eliminado a la hora de editar el curso
+                                                  (cosa que no debería de pasar).
+                                    {% endcomment %}
+                                    {% if x.getHorario %}{% with x.getHorario as horario_materia %}
+                                        {% for dia in horario_materia.dias %} {{ dia }}<br/> {% endfor %}
+                                        {% for horario in horario_materia.horarios %}
+                                            {{ horario.hora_ini }}-{{ horario.hora_fin }}
+                                        {% endfor %}{% endwith %}
+                                    {% else %}
+                                        (horario no definido)
+                                    {% endif %}
+                                </td>
+
+                                <td class="row-hrsFalta">{{ x.horasFalta }}</td>
+                            {% endwith %}
+                        </tr>
+                        {% endfor %}
+                    {% endwith %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

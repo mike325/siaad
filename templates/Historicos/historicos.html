@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Históricos
+{% endblock %}
+
+{% block poshead %}
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/plugins/bootstrap-datepicker.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/plugins/jquery.timepicker.css' %}">
+
+    <script type="text/javascript" src="{% static 'js/datetime/bootstrap-datepicker.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datetime/bootstrap-datepicker.es.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datetime/datepair.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datetime/jquery.datepair.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datetime/jquery.timepicker.min.js' %}"></script>
+    <script>
+        $(document).ready(function()
+        {
+            $('.dateOnly .date').datepicker(
+            {
+                    'format': 'yyyy-mm-dd',
+                    'autoclose': true,
+                    'language': 'es'
+            });
+
+            /*
+                FIX:
+                    + datepair() solo se usa en rangos
+            */
+
+            // var dateOnlyEl = document.getElementById('dateOnly');
+            // var dateOnlyDatepair = new Datepair(dateOnlyEl);
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+
+    <div class="large-7 columns right">
+        <div class="row collapse">
+            <form method="POST" action="/{{dpto.nick}}/historicos/filtro/">{% csrf_token %}
+                <div class="small-9 columns">
+                        <p class="dateOnly" id="dateOnly">
+                            <input type="text" id="fecha" class="date error" name="fecha" placeholder="Buscar por fecha (YYYY-MM-DD)" required/>
+                        </p>
+                        {% if errors %}
+                            <small class="error">{{errors}}</small>
+                        {% endif %}
+                </div>
+                <div class="small-3 columns">
+                    <input type="submit" value="Buscar" class="button expand" style="padding: 10px 12px;">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="large-12 medium-12 columns">
+        <h3 class="text-center">HISTÓRICOS<h3>
+        <ul class="pagination" role="menubar" aria-label="Pagination">
+            {% if registros.has_other_pages %}
+            <li class="arrow">
+                <a href="{% if registros.has_previous %}?pagina={{ registros.previous_page_number }}{% else %}#{% endif %}">&laquo; Anterior</a>
+            </li>
+            
+            {% for i in registros.paginator.page_range %}
+                <li {% if registros.number = i %} class="current"{% endif %}><a href="?pagina={{ i }}">{{ i }}</a></li>
+            {% endfor %}
+
+            <li class="arrow">
+                <a href="{% if registros.has_next %}?pagina={{ registros.next_page_number }}{% else %}#{% endif %}">Siguiente &raquo;</a></li>
+            </li>
+            {% endif %}
+
+            <li><p class="no-margin no-padding paginator-count">Mostrando {{ registros.start_index }}-{{ registros.end_index }} de {{ registros.paginator.count }}.</p></li>
+        </ul>
+
+        
+        <table class="full-width-table">
+            <thead>
+                <th>Usuario</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Descripción</th>
+                <th>De</th>
+                <th>A</th>
+                <th>Tabla</th>
+            </thead>
+
+            <tbody>
+                {% for registro in registros %}
+                <tr>
+                    <td>{{registro.usuario}}</td>
+                    <td>{{registro.fechaHoraModificacion.date}}</td>
+                    <td>{{registro.fechaHoraModificacion.time}}</td>
+                    <td>{{registro.descripcion}}</td>
+                    <td>{{registro.cambioDe}}</td>
+                    <td>{{registro.cambioA}}</td>
+                    <td>{{registro.cambioTabla}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+
+        <ul class="pagination" role="menubar" aria-label="Pagination">
+            {% if registros.has_other_pages %}
+            <li class="arrow">
+                <a href="{% if registros.has_previous %}?pagina={{ registros.previous_page_number }}{% else %}#{% endif %}">&laquo; Anterior</a>
+            </li>
+            
+            {% for i in registros.paginator.page_range %}
+                <li {% if registros.number = i %} class="current"{% endif %}><a href="?pagina={{ i }}">{{ i }}</a></li>
+            {% endfor %}
+
+            <li class="arrow">
+                <a href="{% if registros.has_next %}?pagina={{ registros.next_page_number }}{% else %}#{% endif %}">Siguiente &raquo;</a></li>
+            </li>
+            {% endif %}
+
+            <li><p class="no-margin no-padding paginator-count">Mostrando {{ registros.start_index }}-{{ registros.end_index }} de {{ registros.paginator.count }}.</p></li>
+        </ul>
+
+    </div>
+</div>
+
+{% endblock %}

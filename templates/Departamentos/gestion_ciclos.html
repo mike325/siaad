@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}
+	Gestionar {{ titulo }}
+{% endblock %}
+
+{% block poshead %}
+	{% load staticfiles %}
+	<script type="text/javascript">
+		$(document).ready(function() 
+		{
+			$('.button-editar').click(function()
+			{
+				nodo_act = $(this).parent().parent().children('.indentifier');
+				id = $(nodo_act).text();
+
+				$.ajax(
+				{
+					url: "./sistema/gestionar/{{ area }}/" + id + '/ajax',
+					dataType: 'html'
+				})
+				.done(function( data ) 
+				{
+					$('#dialogo-modif').html(data).foundation('reveal', 'open');
+					$('html, body').delay(400).animate(
+					{
+						scrollTop: $("#dialogo-modif").offset().top+100
+					}, 'fast');
+				})
+				.error(function(data)
+				{
+					error_default = '<div class="row"> <div class="medium-12 medium-centered columns"> <div class="alert-box warning"> Ha ocurrido un error desconocido. </div> </div></div>';
+
+					$('#dialogo-modif').html(error_default).foundation('reveal', 'open');
+				});
+			});
+		});
+	</script>
+{% endblock %}
+
+{% block content %}
+	<div class="row">
+		<div class="medium-12 columns">	
+			<h3 class="text-center">{{ titulo }}</h3>
+			<div class="row">
+				<div class="medium-3 columns right">
+					<button onclick="location.href='./nuevo'" class="button success small hide-for-print right" style="margin-top: 18px;">Nuevo <b>(+)</b></button>
+				</div>
+			</div>
+
+			<table class="full-width-table" id="cursos">
+				<thead>
+					<th>#</th>
+					<th>ID</th>
+					<th>FECHA INICIO</th>
+					<th>FECHA FIN</th>
+					<th>ACCIONES</th>
+				</thead>
+
+				<tbody>
+					{% for dato in datos %}
+						<tr>
+							<td class="row-contador">{{ forloop.counter }}</td>
+							<td class="row-id indentifier">{{ dato.id }}</td>
+							<td class="row-fecha-ini">{{ dato.fecha_ini }}</td>
+							<td class="row-fecha-fin">{{ dato.fecha_fin }}</td>
+							<td class="no-padding"><button class="button expand no-margin button-editar" type="button">Editar</button></td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+<div id="dialogo-modif" class="reveal-modal" data-reveal aria-labelledby="modal-titulo" aria-hidden="true" role="dialog"></div>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Inicio - Administrador
+{% endblock %}
+
+{% block poshead %}
+	{% if bienvenida %}
+	<style type="text/css">
+		.sidebar-image { opacity: 0; }
+		.main-banner { display: none; }
+	</style>
+	<script type="text/javascript">
+		$( document ).ready(function() {
+			$('.main-banner').delay(300).slideDown(function() {
+				$('.sidebar-image').animate({ opacity: 1 }, 1100);
+			});
+		});
+	</script>
+	{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    {% load staticfiles %}
+    {% load verificaciones_iniciales %}
+
+    {% advertencias_sist %}
+
+    <div class="large-4 medium-6 small-12 columns">
+        <div class="division-banner" style="background-image: url('{% static 'img/logos_carreras/robotica.png' %}');"></div>
+        <div class="large-12 colums panel">
+            <h3 class="text-center">Usuarios del sistema<h3>
+            <div class="row">
+                <div class="large-12 columns">
+                    <button class="button expand" onclick="location.href='/activar_usuarios'">Administrar</button>
+                </div>
+                <div class="large-12 columns">
+                    <button class="button expand" onclick="location.href='/nuevo_jefe'">(+) Crear jefe de departamento</button>
+                </div>
+                <div class="large-12 columns">
+                    <button class="button expand" onclick="location.href='/nueva_secretaria'">(+) Crear secretaria</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="large-4 medium-6 small-12 columns">
+        <div class="division-banner" style="background-image: url('{% static 'img/logos_carreras/robotica.png' %}');"></div>
+        <div class="large-12 colums panel">
+            <h3 class="text-center">Cambiar Jefe de Departamento<h3>
+            <div class="row">
+                <div class="large-12 columns">
+                    {% for x in departamentos %}
+                        <button class="button expand" onclick="location.href='/{{x.nick}}/modificar/jefe-departamento'">{{ x }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="large-4 medium-6 small-12 columns">
+        <div class="division-banner" style="background-image: url('{% static 'img/logos_carreras/robotica.png' %}');"></div>
+        <div class="large-12 colums panel">
+            <h3 class="text-center">Históricos<h3>
+            <div class="row">
+                {% for x in departamentos %}
+                <div class="large-12 columns">
+                    <button class="button expand" onclick="location.href='/{{x.nick}}/historicos'">{{x}}</button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="row">
+
+    <div class="large-4 medium-6 small-12 columns">
+        <div class="division-banner" style="background-image: url('{% static 'img/logos_carreras/robotica.png' %}');"></div>
+        <div class="large-12 colums panel">
+            <h3 class="text-center">Añadir Departamento<h3>
+            <div class="row">
+                <div class="large-12 columns">
+                    <button class="button expand" onclick="location.href='/nuevo_departamento'">Nuevo Departamento</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

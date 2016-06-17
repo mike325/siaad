@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Cambiar Jefe de Departamento - Administrador
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+	<div class="medium-12 columns ">	
+		<table class="full-width-table">
+			<caption><h3>Usuarios<h3></caption>
+
+			<thead>
+                <th>USUARIO</th>
+                <th>NOMBRE</th>
+                <th>APELLIDO</th>
+                <th>PUESTO</th>
+                <th>STATUS</th>
+            </thead>
+
+			<tbody>
+                <form method='POST' action='/activar_usuarios'>{% csrf_token %}
+                {% for x in usuarios %}
+                <tr>
+                    <td class="row-username">{{ x.user.username }}</td>
+                    <td class="row-nombre">{{ x.user.first_name }}</td>
+                    <td class="row-apellido">{{ x.user.last_name }}</td>
+                    <td class="row-rol">{{ x.rol.tipo }}</td>
+                    <td>
+                        <input type="radio" name="{{ x }}" value="active" id="{{ x }}-active" {% if x.user.is_active %}checked{% endif %}>
+                            <label for="{{ x }}-active">Activo</label>
+                        <input type="radio" name="{{ x }}" value="unactive" id="{{ x }}-unactive" {% if not x.user.is_active %}checked{% endif %}>
+                            <label for="{{ x }}-unactive">Desactivar</label>
+
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan=5><input type="submit" value="Aplicar cambios" class="small button radius right"/></td>
+                </tr>
+                </form>
+            </tbody>
+        </table>
+	</div>
+
+</div>
+{% endblock %}

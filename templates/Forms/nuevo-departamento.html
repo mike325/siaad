@@ -1,0 +1,35 @@
+{% extends 'Forms/base.html' %}
+
+{% block title %}
+    Nuevo Departamento - Administrador
+{% endblock %}
+
+{% block formulario %}
+	{% if not opcionesJefeDepartamento %}
+		<div class="alert-box warning radius">No hay jefes de departamento disponibles para asignar.<br/>
+			<a href="/nuevo_jefe/" style="color: #FFF190;">Por favor, cree uno primero.</a>
+		</div>
+	{% endif %}
+
+	<div class="row">
+		<div class="medium-12 columns">
+			<h4>Nuevo Departamento</h4>
+			<form method='POST' action="/nuevo_departamento">{% csrf_token %}
+				<label>Nombre del Departamento</label>
+					<input type="text" name='nombre' placeholder="Nombre de la nueva división" data-tooltip aria-haspopup="true" title="Nombre completo del departamento" required/>
+
+	       		<label>Abreviación del Departamento</label>
+	       			<input type="text" pattern="[a-zA-Z0-9]{3,20}" maxlength="20" name="abreviacion" placeholder="(ej: computacion, electronica)" data-tooltip aria-haspopup="true" title="Solo puede contener letras y numeros, sin espacios. De 3 a 9 caracteres" required/>
+
+	       		<label>Jefe del departamento</label>
+		       		<select name="nuevoJefe" required>
+                        {% for opcionJefeDepartamento in opcionesJefeDepartamento %}
+                        <option value="{{opcionJefeDepartamento}}">{{ opcionJefeDepartamento.user.last_name }}, {{opcionJefeDepartamento.rol}} ({{opcionJefeDepartamento.codigo}})</option>
+                        {% endfor %}
+                    </select>
+                    
+	       		<button class="button expand" {% if not opcionesJefeDepartamento %}disabled{% endif %}>Continuar</button>
+	       	</form>
+		</div>
+	</div>	
+{% endblock %}

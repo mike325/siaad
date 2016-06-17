@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Inicio - Jefe de Departamento
+{% endblock %}
+
+{% block poshead %}
+    {% if bienvenida %}
+    <style type="text/css">
+        .sidebar-image { opacity: 0; }
+        .main-banner { display: none; }
+    </style>
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            $('.main-banner').delay(300).slideDown(function() {
+                $('.sidebar-image').animate({ opacity: 1 }, 1100);
+            });
+        });
+    </script>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% load staticfiles %}
+    {% load verificaciones_iniciales %}
+
+    <div class="row">
+
+        {% advertencias_sist %}
+
+		{% for dep in lista_departamentos %}
+            {% if dep.jefeDep|lower = request.session.usuario.nick|lower or request.session.usuario.rol > 2 %}
+    			<div class="large-4 medium-6 small-12 columns">
+    				<div class="division-banner" style="background-image: url('{% static 'img/logos_carreras/' %}{{ dep.nick }}.png');"></div>
+    				<div class="large-12 colums panel">
+    					<h3 class="text-center">{{ dep.nombre }}<h3>
+                        <hr/>
+    					<div class="row">
+                            <h4 class="text-center">Tareas iniciales</h4>
+                            <hr/>
+                            <div class="large-12 columns">
+                                <button class="button expand" onclick="location.href='/{{ dep.nick }}/sistema/csv/cursos/'">Subir CSV Cursos</button>
+                            </div>
+                            <div class="large-12 columns">
+                                <button class="button expand" onclick="location.href='/{{ dep.nick }}/sistema/csv/contratos/'">Subir CSV Contratos</button>
+                            </div>
+                            
+                            <h4 class="text-center">Tareas administrativas</h4>
+                            <hr/>
+                            <div class="large-12 columns">
+                                <button class="button expand" onclick="location.href='/{{ dep.nick }}/ver_cursos'">Consulta/Modificacion de Cursos</button>
+                            </div>
+                            <div class="large-12 columns">
+                                <button class="button expand" onclick="location.href='/{{ dep.nick }}/suplentes/nuevo'">Nuevo Suplente</button>
+                            </div>
+                            <div class="large-12 columns">
+                                <button class="button expand" onclick="location.href='/{{ dep.nick }}/suplentes/gestionar'">Gestión de Suplentes</button>
+                            </div>
+
+    					</div>
+    				</div>
+			 </div>
+            {% endif %}
+		{% endfor %}
+
+        <div class="large-4 medium-6 small-12 columns">
+            <div class="division-banner" style="background-image: url('{% static 'img/logos_carreras/robotica.png' %}');"></div>
+            <div class="large-12 colums panel">
+                <h3 class="text-center">Tareas comunes<h3>
+                <div class="row">
+                    <div class="large-12 columns">
+                        <button class="button expand" onclick="location.href='/sistema/ciclos/nuevo'">Nuevo Ciclo</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="large-12 columns">
+                        <button class="button expand" onclick="location.href='/sistema/ciclos/gestionar'">Administrar Ciclos</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="large-12 columns">
+                        <button class="button expand" onclick="location.href='/sistema/profesores/nuevo'">Nuevo Profesor</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="large-12 columns">
+                        <button class="button expand" onclick="location.href='/sistema/profesores/gestionar'">Administrar Profesores</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="large-4 medium-6 small-12 columns">
+            <div class="division-banner" style="background-image: url('{% static 'img/logos_carreras/robotica.png' %}');"></div>
+            <div class="large-12 colums panel">
+                <h3 class="text-center">Usuarios del sistema<h3>
+                <div class="row">
+                    <div class="large-12 columns">
+                        <button class="button expand" onclick="location.href='/nueva_secretaria'">(+) Crear secretaria</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="large-4 medium-6 small-12 columns end">
+            <div class="division-banner" style="background-image: url('{% static 'img/logos_carreras/robotica.png' %}');"></div>
+            <div class="large-12 colums panel">
+                <h3 class="text-center">Históricos<h3>
+                <div class="row">
+                    {% for dep in lista_departamentos %}
+                        {% if dep.jefeDep|lower = request.session.usuario.nick|lower or request.session.usuario.rol > 2 %}
+                        <div class="large-12 columns">
+                            <button class="button expand" onclick="location.href='/{{dep.nick}}/historicos'">{{dep}}</button>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+	</div>
+{% endblock %}

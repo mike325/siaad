@@ -1,0 +1,170 @@
+{% comment %}
+	FIX:
+		- Nuevo estilo:
+			Ajustado a la nueva vista de árbol/acordeón.
+			Todavía faltan algunos ajustes, pero debería estar bien por ahora.
+{% endcomment %}
+
+<div class="large-2 columns hide-on-print no-padding white-bg" style="border: 1px solid #d8d8d8;">
+	<div class="no-margin no-padding">
+		{% load staticfiles %}
+		<a href="/"><div class="sidebar-image" style="background-image: url('{% static 'img/SIIAD-logo.png' %}');"></div></a>
+
+		{# barra mas pequeña (sin acordeon). pantalllas inferiores a 1024px #}
+		<div class="no-margin no-padding hide-for-large-up">
+			<ul class="no-bullet no-margin sidebar-nav lt-large">
+				{% if request.session.rol > 0 %}
+					<li><a href="/inicio-secretaria">Secretaria</a></li>
+				{% endif %}
+				{% if request.session.rol > 1 %}
+					<li><a href="/inicio-jefedep">Jefe de Departamento</a></li>
+				{% endif %}
+				{% if request.session.rol > 2 %}
+					<li><a href="/inicio-administrador">Administrador</a></li>
+				{% endif %}
+				<li><a href="/creditos">Acerca de SIIAD</a></li>
+			</ul>
+		</div>
+
+		<div class="no-margin no-padding show-for-large-up">
+			<ul class="accordion no-bullet no-margin no-padding sidebar-nav" data-accordion>
+
+			{% if request.session.rol > 0 %}
+				<li class="accordion-navigation">
+
+				    <a href="#panel1">Secretaria</a>
+				    <div id="panel1" class="content no-margin no-padding">
+				    	<a href="/inicio-secretaria/">Panel de inicio</a>
+						{% for x in lista_departamentos %}
+							<ul class="accordion inner-accordion" data-accordion>
+								<li class="accordion-navigation">
+					   				<a href="#panel1{{x.nick}}">{{x.nombre}}</a>
+					   				<div id="panel1{{x.nick}}" class="content">
+					   					<ul class="accordion no-margin">
+			   								<li><a href="/{{x.nick}}/listas/tCompleto">Listas-Tiempo Completo</a></li>
+			   								<li><a href="/{{x.nick}}/listas/tMedio">Listas-Medio Tiempo</a></li>
+											<li><a href="/{{x.nick}}/form-incidencias">Ver Incidencias</a></li>
+											<li><a href="/{{x.nick}}/form-reporte-incidencias">Reportar Incidencia</a></li>
+					   					</ul>
+					   				</div>
+				   				</li>
+							</ul>
+						{% endfor %}
+
+						<ul class="accordion inner-accordion" data-accordion>
+							<li class="accordion-navigation">
+								<a href="#panel1estadisticas">Estadisticas</a>
+				   				<div id="panel1estadisticas" class="content">
+				   					<ul class="accordion no-margin">
+					   					<li><a href="/estadisticas-profesor">Estadísticas Profesor</a></li>
+							    		<li><a href="/estadisticas-materia">Estadísticas Materia</a></li>
+							    		<li><a href="/estadisticas-ciclo">Estadísticas Ciclo</a></li>
+							    		{% for x in lista_departamentos %}
+							    			<li><a href="/{{x.nick}}/estadisticas-departamento">Estadísticas {{x}}</a></li>
+							    		{% endfor %}
+						    		</ul>
+					    		</div>
+				    		</li>
+				    	</ul>
+				    </div>
+
+				</li>
+			{% endif %}
+
+			{% if request.session.rol > 1 %}
+			  	<li class="accordion-navigation">
+
+				    <a href="#panel2">Jefe de Departamento</a>
+				    <div id="panel2" class="content no-margin no-padding">
+				    	<a href="/inicio-jefedep/">Panel de inicio</a>
+				    	<a href="/nueva_secretaria">Crear Nueva Secretaria</a>
+						<ul class="accordion inner-accordion" data-accordion>
+							<li class="accordion-navigation">
+				   				<a href="#panel-prof">Profesores</a>
+				   				<div id="panel-prof" class="content">
+				   					<ul class="accordion no-margin">
+										<li><a href="/sistema/profesores/nuevo">Nuevo Profesor</a></li>
+										<li><a href="/sistema/profesores/gestionar">Gestionar Profesores</a></li>
+		   							</ul>
+		   					 	</div>
+		   					</li>
+		   				</ul>
+		   				<ul class="accordion inner-accordion" data-accordion>
+							<li class="accordion-navigation">
+				   				<a href="#panel-ciclo">Ciclos</a>
+				   				<div id="panel-ciclo" class="content">
+				   					<ul class="accordion no-margin">
+										<li><a href="/sistema/ciclos/nuevo">Nuevo Ciclo</a></li>
+										<li><a href="/sistema/ciclos/gestionar">Gestionar Ciclos</a></li>
+		   							</ul>
+		   					 	</div>
+		   					</li>
+		   				</ul>
+{% comment %}
+				    	{% for x in lista_departamentos %}
+			    			{% if x.jefeDep|lower = request.session.usuario.nick|lower or request.session.usuario.rol > 2 %}
+			    				
+			    			{% endif %}
+			    		{% endfor %}
+{% endcomment %}
+
+						{% for x in lista_departamentos %}
+							{% with x.jefeDep|lower as dep_jefeActual %}
+								{% if dep_jefeActual = request.session.usuario.nick|lower or request.session.usuario.rol > 2 %}
+								<ul class="accordion inner-accordion" data-accordion>
+									<li class="accordion-navigation">
+						   				<a href="#panel2{{x.nick}}">{{x.nombre}}</a>
+						   				<div id="panel2{{x.nick}}" class="content">
+						   					<ul class="accordion no-margin">
+					   							<li><a href="/{{x.nick}}/sistema/csv/cursos/">Subir CSV cursos</a></li>
+					   							<li><a href="/{{x.nick}}/sistema/csv/contratos/">Subir CSV contratos</a></li>
+					   							<li><a href="/{{x.nick}}/ver_cursos">Consulta/Modificar Cursos</a></li>
+					   							<li><a href="/{{x.nick}}/historicos">Histórico de cambios</a></li>
+					   							<li><a href="/{{x.nick}}/suplentes/nuevo">Nuevo Suplente</a></li>
+												<li><a href="/{{x.nick}}/suplentes/gestionar">Gestionar Suplentes</a></li>
+						   					</ul>
+						   				</div>
+					   				</li>
+								</ul>
+								{% endif %}
+							{% endwith %}
+						{% endfor %}
+				    </div>
+
+				</li>
+			{% endif %}
+
+			{% if request.session.rol > 2 %}
+			  	<li class="accordion-navigation">
+				    <a href="#panel3">Administrador</a>
+				    <div id="panel3" class="content no-margin no-padding">
+				    	<a href="/inicio-administrador/">Panel de inicio</a>
+			    		<a href="/nuevo_jefeDep">Crear Jefe de Departamento</a>
+			    		<a href="/nuevo_departamento">Crear Nuevo Departamento</a>
+			    		<a href="/activar_usuarios">Administrar Usuarios</a>
+			    		{% for x in lista_departamentos %}
+			    				<a href="/{{x.nick}}/historicos" class="accordion-top-sublink">Históricos {{x}}</a>
+			    		{% endfor %}
+
+						<ul class="accordion inner-accordion" data-accordion>
+							<li class="accordion-navigation">
+								<a href="#panel1estadisticas">Cambiar Jefe de Departamento</a>
+				   				<div id="panel1estadisticas" class="content">
+				   					<ul class="accordion no-margin">
+				   					{% for x in lista_departamentos %}
+						    			<li><a href="/{{x.nick}}/modificar/jefe-departamento">{{x}}</a></li>
+						    		{% endfor %}
+						    		</ul>
+				   				</div>
+			   				</li>
+			   			</ul>
+				    </div>
+				</li>
+			{% endif %}
+			</ul>
+		</div>
+		<div class="show-for-large-up no-margin no-padding text-center" id="creditos-div">
+			<a href="/creditos">Acerca de SIAAD</a>
+		</div>
+	</div>
+</div>

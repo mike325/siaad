@@ -1,0 +1,28 @@
+{% extends 'Forms/base.html' %}
+
+{% block title %}
+    Cambiar Jefe de Departamento - Administrador
+{% endblock %}
+
+{% block formulario %}
+    {% if errors %}
+        <div class="alert-box warning radius">{{errors}}</div>
+    {% endif %}
+
+    <h3 class="text-center">Cambiar Jefe de Departamento<h3>
+    <form method='POST' action="/{{departamento.nick}}/modificar/jefe-departamento">{% csrf_token %}
+        <label>Jefe actual</label>
+            <input type="text" name="jefeActual" readonly="readonly" value="{{jefeActual}}, {{jefeActual.user.last_name}}, {{jefeActual.user.first_name}} ({{jefeActual.codigo}})"/>
+
+        <label>Departamento</label>
+            <input type="text" name="departamento" value="{{departamento}}" readonly="readonly"/>
+
+        <label>Nuevo Jefe</label>
+            <select name="nuevoJefe">
+            {% for x in opcionesJefeDepartamento %}
+                <option value="{{x}}">{{ x.user.last_name }}, {{x.rol}} ({{x.codigo}})</option>
+            {% endfor %}
+            </select>
+        <button class="button expand" {% if not opcionesJefeDepartamento %}disabled{% endif %}>Continuar</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends 'Forms/base.html' %}
+
+{% block title %}
+    {{ titulo_tipo }} - Subir CSV 
+{% endblock %}
+
+{% block poshead %}
+<style type="text/css">
+    input[type="file"]
+    {
+        background-color: #FAFAFA;
+        padding: 4px 12px;
+        text-align: center;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+</style>    
+{% endblock %}
+
+{% block formulario %}
+    <form action="./subir" method="POST" enctype="multipart/form-data">{% csrf_token %}
+        <h3 class="text-center">Subir CSV</h2>
+
+        {% if success and not errores %}
+            <div class="alert-box success radius">
+                <h4>Todo bien</h4>
+                Los datos se han agregado correctamente a la base de datos.
+                <br/>No hubo ningun incidente.
+            </div>
+        {% elif success and errores %}
+            <div class="alert-box success radius">
+                <h4>Hay algunos problemas</h4>
+                Los datos se agregaron correctamente en la base de datos, pero se 
+                observaron algunos incidentes. Vea los mensajes en la parte de abajo 
+                para mas informacion.
+            </div>
+        {% endif %}
+
+        {% if errores %}
+            <div data-alert class="alert-box warning error-edit radius">
+                <ul class="font-small no-margin-bot">
+                    {% for error in errores %}
+                        <li class="font-small"><b>{{ error.propiedad }}:</b> {{ error.descripcion|safe }}</li>
+                    {% endfor %}
+                </ul>
+                <a href="#" class="close">x</a>
+            </div>
+        {% endif %}
+
+        {% if not success %}
+            <div class="alert-box info radius">
+                Seleccione un ciclo escolar.<br/>
+                Ubique el archivo usando el boton "Seleccionar Archivo" y finalmente
+                haga clic en "Subir archivo".<br/><br/>
+                <b>El sistema solo admite archivos .csv. Si desea exportar los datos de una tabla de excel 
+                use el cuadro de dialogo "Guardar Como" y seleccione "Archivo CSV" en la parte de abajo.</b><br/><br/>
+                Para más instrucciones sobre como usar, convertir y subir archivos CSV al sistema, <a href="/consideraciones-csv">haga clic aqui</a>.
+            </div>
+
+            <label>Departamento:</label>
+                <input type="text" value="{{ departamento.nombre }}" readonly="readonly">
+                <input type="hidden" name="depto" value="{{ departamento.nick }}">
+
+            <label>Ciclo escolar:</label>
+                <select name="ciclo-esc">
+                {% for ciclo in lista_ciclos %}
+                    <option value="{{ ciclo.id }}">{{ ciclo.id }} ({{ ciclo.fecha_ini }} al {{ ciclo.fecha_fin }})</option>
+                {% endfor %}
+                </select>
+        {% endif %}
+
+        <label>Archivo CSV:</label>
+            <input type="file" name="archivo-csv" accept="text/csv, .csv" {% if success %}disabled{% endif %}>
+
+        <input type="submit" value="Subir archivo" class="button small" onsubmit="this.disabled = true" {% if desactivar or success %}disabled{% endif %}>
+    </form>
+{% endblock %}

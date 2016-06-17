@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Consideraciones CSV
+{% endblock %}
+
+{% block poshead %}
+	<style type="text/css">
+		.titulo
+		{
+			margin-bottom: 45px !important;
+		}
+
+		ol > li
+		{
+			margin-bottom: 40px;
+		}
+	</style>
+{% endblock %}
+
+{% block content %}
+	{% load staticfiles %}
+	<div class="row">
+		<div class="full-width-container">
+			<div class="panel">
+				<h3 class="text-center titulo">Consideraciones para Archivos CSV</h3>
+				<p>Esta mini-guia tiene como propósito orientar en el uso del sistema en lo que refiere a la subida de archivos y su formato.</p>
+				<ul>
+					<li>
+						<h4 style="font-weight: bold;">Exportar contratos desde una tabla de Excel</h4>
+						<p>Cada vez que ud desee usar los datos desde una tabla de Excel en el sistema, necesita realizar algunos procedimientos.</p>
+
+						<p>A continuación se describe paso a paso dichos procedimientos.</p>
+
+						<ol>
+							<li>
+									<b>Asegurese de que todos los datos son correctos.</b><br/>
+								El sistema de subida no puede revisar a fondo que ud posea todos los datos correctos. Lo que es más, no está diseñado para (dentro de un ciclo determinado) sobreescribir los cambios cada que ud sube un nuevo archivo.
+							</li>
+
+							<li>
+									<b>Verifique la posición de las siguientes columnas:</b><br/>
+								Las columnas marcadas en amarillo deben estar en la posición en la que se muestran dentro de la imagen. <br/>
+								<img src="{% static 'img/tutorial_csv/01.png' %}">
+								<br/>
+								<br/>
+								Esto es:
+									<ul>
+										<li><code>CRN</code> en la 5º posicion.</li>
+										<li><code>Tipo</code> en la 7º posicion.</li>
+										<li><code>Tipo Contrato</code> en la 12º posicion.</li>
+									</ul>
+							</li>
+
+							<li>
+									<b>Elimine las filas cuya información no desea que se agregue al sistema.</b><br/>
+								El sistema agregará automaticamente toda la información que encuentre dentro de la tabla. Si no desea que cierta información se agregue al sistema, elimine cada una de las filas donde se encuentra dicha información.
+							</li>
+
+							<li>
+									<b>Utilice el dialogo "Guardar Como".</b><br/>
+								Dirijase a <code>Archivo</code> y posteriormente haga clic en <code>Guardar Como</code>
+								<img src="{% static 'img/tutorial_csv/02.png' %}">
+							</li>
+
+							<li>
+									<b>Haga clic en la lista desplegable al lado de <code>tipo</code>.</b><br/>
+								<img src="{% static 'img/tutorial_csv/03.png' %}">
+							</li>
+
+							<li>
+									<b>En la lista, seleccione <code>CSV (delimitado por comas)</code>.</b><br/>
+								Dicha opción se encuentra generalmente dentro de las primeras. <br/> 
+								<b>Asegurese de no seleccionar otra opción similar, como las que se muestran en rojo en la siguiente imágen.</b>
+								<img src="{% static 'img/tutorial_csv/04.png' %}">
+							</li>
+
+							<li>
+									<b>Guarde el archivo.</b><br/>
+								Dirijase a la carpeta deseada y guarde el archivo.<br/>
+								<img src="{% static 'img/tutorial_csv/05.png' %}">
+								<br/><br/>
+								Es posible que justo después, le aparezca una advertencia como la siguiente:<br/>
+								<img src="{% static 'img/tutorial_csv/06.png' %}"><br/><br/>
+								Para resolver esto, haga clic en <code>Si</code>.
+								<br/>
+								<b>Enhorabuena, su archivo CSV estará guardado correctamente y listo para subirse al sistema.</b>
+							</li>
+						</ol>
+					</li>
+				</ul>
+
+				<hr/>
+				<div class="row">
+					<div class="left medium-12 columns">
+						<button type="button" class="button radius" onclick="window.history.back();">Regresar a la pagina anterior</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    ERROR 403 - Acceso Denegado
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="medium-8 columns medium-centered">
+            <div class="panel">
+                <h4>ERROR 403</h4>
+                <p>La url solicitada (<a href="{{ origen }}">{{ origen }}</a>)<br/>no esta disponible temporalmente o no posee permiso para acceder a ella.</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

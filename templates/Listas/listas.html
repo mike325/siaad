@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Listas
+{% endblock %}
+
+{% block poshead %}
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/print/formatos.css' %}" type="text/css" media="print" />
+
+    <script type="text/javascript">
+    $(document).ready(function()
+    { // Cuando el documento está listo...
+        $('td.assist-col input[type="checkbox"]').click(function()
+        {
+            contenedor = $(this).parent("td");
+
+            if ( this.checked==true ) { contenedor.removeClass("no-asistio"); }
+                else { contenedor.addClass("no-asistio"); }
+        });
+    });
+
+    function ConfirmarEnvio(ref)
+    {
+        mensaje = "Recuerde que las asistencias solo pueden enviarse una "
+                + "vez, y no pueden modificarse posteriormente.\n"
+                + "Revise bien la información antes de continuar.\n\n"
+                + "¿Desea proceder con el envio?";
+
+        return confirm(mensaje);
+    }
+    </script>
+
+    {% if yaRegistradas %}
+    <style type="text/css">.assist-col { display: none !important; }</style>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="medium-12 columns">
+            
+            {# Lista de docentes tiempo completo #}
+            {% if tiempoC %}
+            <div class="row">
+                <div class="medium-12 columns">
+                    <h4 class="text-center">Centro Universitario de Ciencias Exactas e Ingenierías</h4>
+                    {% if yaRegistradas %}
+                        <div class="alert-box warning radius text-center hide-for-print">
+                            Las asistencias del día ya fueron registradas
+                        </div>
+                    {% endif %}
+                    <hr/>
+
+                    <button type="button" class="button tiny hide-for-print right" onclick="print()">Imprimir formato</button>
+                    <table class="full-width-table">
+                        <thead>
+                            <tr>
+                                <th rowspan="2" class="hide-for-print">N°</th>
+                                <th>{{ today }}</th>
+                                <th colspan="2">ENTRADA</th>
+                                <th colspan="2">SALIDA</th>
+                                <th rowspan="2" class="hide-for-print assist-col">Asistencia</th>
+                            </tr>
+                            <tr> 
+                                <th>NOMBRE</th>
+                                <th>HORA</th>
+                                <th class="sign-field text-center">FIRMA</th>
+                                <th>HORA</th>
+                                <th class="sign-field text-center">FIRMA</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <form method="POST">{% csrf_token %}
+                            {% for x in listaAsistencia %}
+                                <tr>
+                                    <td class="hide-for-print">{{ forloop.counter }}</td>
+                                    <td class="row-nombre">{% spaceless %}
+                                        {{ x.profesor }}
+                                        {% if x.suplente %}
+                                            {% with x.suplente as suplentes_profesor %}
+                                                <div class="no-padding suplentes margin">
+                                                    <b>Suplentes</b>:<br/>
+                                                    {% for supp in suplentes_profesor %}
+                                                        {{ supp.fk_curso.NRC }} {{ supp.fk_curso.fk_materia.clave }}({{ supp.fk_curso.fk_secc.id }}) -> {{ supp.fk_profesor.apellido }}, {{ supp.fk_profesor.nombre }} ({{ supp.fk_profesor.codigo_udg }})
+                                                        {% if not forloop.last %}<br/>{% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                            {% endwith %}
+                                        {% endif %}
+                                    {% endspaceless %}</td>
+                                    <td class="row-hora-in">{{ x.hora_ini }}</td>
+                                    <td class="row-sign">{# firma #}</td>
+                                    <td class="row-hora-in">{{ x.hora_fin }}</td>
+                                    <td class="row-sign">{# firma #}</td>
+                                    <td class="hide-for-print text-center assist-col">
+                                        <input type="hidden" name="{{x.codigo_prof}}" value="off" />
+                                        <input type="checkbox" id="asistencia" name="{{x.codigo_prof}}" checked/>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            <tr class="hide-for-print">
+                                <td colspan="7"><input type="submit" class="button expand" onclick="return ConfirmarEnvio(this);" value="Registrar Asistencias" {% if yaRegistradas == True or not listaAsistencia %}disabled{% endif %}/></td>
+                            </tr>
+                            </form>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+
+            {# Lista de docentes de medio tiempo #}
+            {% if tiempoM %} 
+            <div class="row">
+                <div class="medium-12 columns">
+                    {% if yaRegistradas %}
+                    <div class="alert-box warning radius text-center hide-for-print">
+                        Las asistencias del día ya fueron registradas
+                    </div>
+                    {% endif %}
+                    <button type="button" class="button tiny right hide-for-print" onclick="print()">Imprimir formato</button>
+                    <table class="full-width-table">
+                        <thead>
+                            <tr class="especialHead">
+                                {# <th class="hide-for-print"></th> #}
+                                <th colspan="2">
+                                    {% load staticfiles %}
+                                    <div style="width: 100px; height: 100%;">
+                                        <img src="{% static 'img/udglogo.jpg' %}">
+                                    </div>
+                                </th>
+
+                                <th class="text-center" colspan="3">
+                                    UNIVERSIDAD DE GUADALAJARA<br>
+                                    {{ departamento|upper }}<br>
+                                    LISTADO DE FIRMAS {{ dayWeek }}
+                                </th>
+                                <th colspan="3">
+                                    FECHA <u>&nbsp;&nbsp;{{ day }} {{ month }} {{ year }}&nbsp;&nbsp;</u>
+                                </th>
+                                 <th class="hide-for-print assist-col"></th>
+                            </tr>
+                            <tr>
+                                <th rowspan="2" class="hide-for-print">N°</th>
+                                <th>NRC</th>
+                                <th>NOMBRE</th>
+                                <th>MATERIA</th>
+                                <th>SEC</th>
+                                <th>EDIF.</th>
+                                <th>AULA</th>
+                                <th>HOR.</th>
+                                <th class="sign-field text-center">FIRMA</th>
+                                <th class="hide-for-print assist-col">Asistencia</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <form method="POST">{% csrf_token %}
+                            {% for x in listaContratos %}
+                                {% with x.fk_curso as curso %}
+                                {# FIX: "with" reduce las llamadas directas a la base de datos #}
+                                    <tr>
+                                        <td class="hide-for-print">{{ forloop.counter }}</td>
+                                        <td class="row-nrc">{{ curso.NRC }}</td>
+                                        <td class="row-nombreprof">{% spaceless %}
+                                            {{ curso.fk_profesor.apellido }}, {{curso.fk_profesor.nombre}} ({{ curso.fk_profesor.codigo_udg }})
+                                            {# change #}
+                                            {% if curso.suplente and curso.suplente in lista_suplentes %}
+                                                <div class="no-padding suplentes">
+                                                    <b>Suplente</b>:<br/>{{ curso.suplente.fk_profesor.apellido }} {{ curso.suplente.fk_profesor.nombre }} ({{ curso.suplente.fk_profesor.codigo_udg }})
+                                                </div>
+                                            {% endif %}
+                                        {% endspaceless %}</td>
+                                        <td class="row-materia">{{ curso.fk_materia.nombre }}</td>
+                                        <td class="row-secc">{{ curso.fk_secc.id }}</td>
+                                        {% with curso.fk_horarios.all as horarios_curso %}
+                                        {# FIX: "with" reduce las llamadas directas a la base de datos #}
+                                            <td class="row-edif">
+                                            {% for horario in horarios_curso %}
+                                                {% if horario in horarios %}
+                                                    {{ horario.fk_edif.id }}{% if not forloop.last %}<br/>{% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            </td>
+                                            <td class="row-aula">
+                                            {% for horario in horarios_curso %}
+                                                {% if horario in horarios %}
+                                                    {{ horario.fk_aula.nombre }}<br>   
+                                                {% endif %}
+                                            {% endfor %}
+                                            </td>
+                                            <td class="row-horario">
+                                            {% for horario in horarios_curso %}
+                                                {% if horario in horarios %}
+                                                    {{ horario.hora_ini }}-{{horario.hora_fin}}<br>  
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endwith %}
+                                        </td>
+                                        <td class="row-firma">{# firma #}</td>
+                                        <td class="hide-for-print text-center assist-col">
+                                            <input type="hidden" name="{{x.id}}" value="off"/>
+                                            <input type="checkbox" id="asistencia" name="{{x.id}}" checked/>
+                                        </td>
+                                    </tr>
+                                {% endwith %}
+                            {% endfor %}
+                            <tr class="hide-for-print">
+                                <td colspan="10"><input type="submit" class="button expand" onclick="return ConfirmarEnvio(this);" {% if yaRegistradas == True or not listaContratos %}disabled{% endif %}/></td>
+                            </tr>
+                            </form>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

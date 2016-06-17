@@ -1,0 +1,147 @@
+{% extends 'Forms/base.html' %}
+
+{% block title %}
+	Nuevo Suplente
+{% endblock %}
+
+{% block poshead %}
+	{% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/plugins/bootstrap-datepicker.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/plugins/jquery.timepicker.css' %}">
+
+    <script type="text/javascript" src="{% static 'js/datetime/bootstrap-datepicker.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datetime/bootstrap-datepicker.es.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datetime/datepair.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datetime/jquery.datepair.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datetime/jquery.timepicker.min.js' %}"></script>
+
+	<script type="text/javascript">
+	$(document).ready(function()
+	{
+		$('#in-cubrir-ciclo').change(function()
+		{
+			if ( this.checked == true )
+			{
+				$('.rango-fecha input[type="text"]').attr("disabled", true);
+			}
+			else
+			{
+				$('.rango-fecha input[type="text"]').removeAttr("disabled");
+			}
+		});
+
+		$('.date').datepicker(
+        {
+            'format': 'yyyy-mm-dd',
+            'autoclose': true,
+            'language': 'es'
+            {% if ciclo_vigente %}
+            	,'startDate': '{{ ciclo_vigente.0.fecha_ini|date:"Y-m-d" }}',
+            	'endDate': '{{ ciclo_vigente.0.fecha_fin|date:"Y-m-d" }}'
+            {% endif %}
+        });
+
+        $('.rango-fecha').datepair();
+	});
+
+    var materias = { {% for profe in lista_profesores %} '{{ profe.codigo_udg }}': [{% for curso in profe.curso_set.all %} {% if curso in lista_cursos %} {'id_curso': {{ curso.NRC }}, 'id_materia': '{{ curso.fk_materia.clave }}', 'seccion': '{{ curso.fk_secc }}', 'horario': [{% for x in curso.fk_horarios.all %} {'hora_ini': '{{ x.hora_ini }}', 'hora_fin': '{{ x.hora_fin }}'}{% if not forloop.last %},{% endif %}{% endfor %} ] }{% if not forloop.last %},{% endif %} {% endif %} {% endfor %} ]{% if not forloop.last %},{% endif %} 
+    {% endfor %} };
+
+
+    function filtra_materias(ref)
+    {
+        sel_listaMat = $('#curso');
+        sel_listaMat.empty();
+
+        seleccionada = ref.options[ref.selectedIndex];
+        // console.log(seleccionada); // DEBUG
+
+        $(materias[ seleccionada.value ]).each(function() 
+        {
+            node = document.createElement('option');
+            node.value = this.id_curso;
+            node.innerHTML = this.id_curso + ' - ' + this.id_materia + '(' + this.seccion + '): ';
+
+            for (var i = 0; i < this.horario.length; i++) {
+            	node.innerHTML += this.horario[i].hora_ini + '-' 
+            					+ this.horario[i].hora_fin + ' ';
+            };
+
+            sel_listaMat.append(node);
+        });
+        // console.log(sel_listaMat); // DEBUG
+    }
+	</script>
+{% endblock %}
+
+{% block formulario %}
+	{% if errores %}
+	<div class="alert-box alert radius"><ul>
+		{% for error in errores %}
+			<li><b>{{ error.tipo }}</b>: {{ error.desc }}</li>
+		{% endfor %}
+	</ul></div>
+	{% endif %}
+
+	<form action="{{ request.path }}" method="POST">{% csrf_token %}
+		<h3>Nuevo Suplente</h3>
+		<div class="row">
+			<div class="medium-6 columns">
+				<label>Profesor</label>
+					<select id="profesor" onchange="filtra_materias(this)">
+						<option value="0" disabled="true" selected="true">(seleccione)</option>
+						{% for profe in lista_profesores %}
+							<option value="{{ profe.codigo_udg }}">
+								{{ profe.apellido }}, {{ profe.nombre }} ({{ profe.codigo_udg }})
+							</option>
+						{% endfor %}
+					</select>
+			</div>
+			<div class="medium-6 columns">
+				<label>Curso</label>
+					<select name="curso" id="curso">
+						<option value="0" disabled="true" selected="true">NRC - MAT(SECC): [horarios]</option>
+						<option value="0" disabled="true">(seleccione un profesor primero)</option>
+					</select>
+			</div>
+		</div>
+		<div class="row">
+			<div class="medium-12 columns">
+				<label>Suplente</label>
+					<select name="in-supp">
+						<option value="0" disabled="true" selected="true">(seleccione)</option>
+						{% for profe in lista_suplentes %}
+							<option value="{{ profe.codigo_udg }}">
+								{{ profe.apellido }}, {{ profe.nombre }} ({{ profe.codigo_udg }})
+							</option>
+						{% endfor %}
+					</select>
+			</div>
+		</div>
+		<div class="row">
+			<div class="medium-12 columns">
+				<fieldset>
+					<legend>Periodo a cubrir</legend>
+					<div class="row rango-fecha">
+						<div class="medium-4 columns">
+							<label>Inicio</label>
+								<input name="in-fecha-ini" class="date start" type="text">
+						</div>
+						<div class="medium-4 columns">
+							<label>Fin</label>
+								<input name="in-fecha-fin" class="date end" type="text">
+						</div>
+						<div class="medium-4 columns text-center" style="padding-top: 26px;">
+							<input name="in-cubrir-ciclo" id="in-cubrir-ciclo" type="checkbox" /><label for="in-cubrir-ciclo">Cubrir ciclo completo</label>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+		</div>
+		<div class="row">
+			<div class="medium-6 columns">
+				<button type="submit" class="button expand">Enviar</button>
+			</div>
+		</div>
+	</form>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<div class="row">
+	{% if form_size = "mini" %}
+		<div class="large-4 medium-6 medium-centered columns panel {{ form_classes }}">
+	{% elif form_size = "small" %}
+		<div class="medium-6 medium-centered columns panel {{ form_classes }}">
+	{% elif form_size = "medium" %}
+		<div class="medium-12 large-8 medium-centered columns panel {{ form_classes }}">
+	{% elif form_size = "large" %}
+		<div class="medium-12 large-11 medium-centered columns panel {{ form_classes }}">
+	{% elif form_size = "custom" %}
+		<div class="{{ form_classes }}">
+	{% else %}
+		<div class="panel full-width-panel {{ form_classes }}">
+	{% endif %}
+		{% block formulario %}{% endblock %}
+		</div>
+	</div>
+{% endblock %}

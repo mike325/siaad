@@ -21,10 +21,10 @@ DEBUG = os.environ.get('DEBUG') == 'True'
 ADMINS = (('Miguel Ochoa', 'siaad.cucei@prodeveloper.me'),)
 
 import sys
-sys.path.append(os.path.join(REPO_DIR, 'libs'))
+sys.path.append(os.path.join(BASE_DIR, 'libs'))
 sys.path.append(os.path.join(BASE_DIR, 'apps'))
 import secrets
-SECRETS = secrets.getter(os.path.join(DATA_DIR, 'secrets.json'))
+SECRETS = secrets.getter(os.path.join(BASE_DIR, 'secrets.json'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/

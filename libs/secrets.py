@@ -1,7 +1,7 @@
 import json
 from unipath import Path
 
-BASE_DIR = Path(__file__).ancestor(4)
+BASE_DIR = Path(__file__).ancestor(2)
 
 __secrets = {
     'secret_key': '4%iv7959!4u!$6!v@i^xp&%h2h$d_hs6%9zyf4%=rm_8fp((n(',
@@ -32,7 +32,7 @@ def generator_dev():
     __secrets['secret_key'] = get_random_string(50, chars)
     __secrets["db_engine"] = 'django.db.backends.sqlite3'
 
-    with open(BASE_DIR.child('data').child('secrets.json'), "w") as ACCESS:
+    with open(BASE_DIR.child('secrets.json'), "w") as ACCESS:
         json.dump(__secrets, ACCESS)
         pass
     return __secrets
@@ -45,7 +45,7 @@ def generator_production():
     chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
     __secrets['secret_key'] = get_random_string(50, chars)
 
-    __secrets["db_engine"] = 'django.db.backends.mysql'
+    #__secrets["db_engine"] = 'django.db.backends.mysql'
 
     """
     Running on production the user should set the following values.
@@ -67,5 +67,5 @@ def generator_production():
     pass
 
 if __name__ == '__main__':
-    data = json.dumps(generator_dev())
+    data = json.dumps(generator_production())
     print(data)

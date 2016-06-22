@@ -14,9 +14,9 @@ import os
 from unipath import Path
 #BASE_DIR = os.path.dirname()
 BASE_DIR = Path(__file__).ancestor(2)
-WSGI_DIR = os.path.dirname(BASE_DIR)
-REPO_DIR = os.path.dirname(WSGI_DIR)
-DATA_DIR = os.environ.get('OPENSHIFT_DATA_DIR', BASE_DIR)
+#WSGI_DIR = os.path.dirname(BASE_DIR)
+#REPO_DIR = os.path.dirname(WSGI_DIR)
+#DATA_DIR = os.environ.get('OPENSHIFT_DATA_DIR', BASE_DIR)
 
 DEBUG = False 
 
@@ -174,7 +174,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = (BASE_DIR.child('static'),)
+STATIC_ROOT = 'staticfiles'
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/

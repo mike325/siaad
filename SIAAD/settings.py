@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).ancestor(2)
 sys.path.append(os.path.join(BASE_DIR, 'libs'))
 sys.path.append(os.path.join(BASE_DIR, 'apps'))
 
-DEBUG = True
+DEBUG = False 
 ALLOWED_HOSTS = []
 SECRET_KEY = None
 SECRETS = None 

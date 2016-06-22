@@ -23,8 +23,8 @@ ADMINS = (('Miguel Ochoa', 'siaad.cucei@prodeveloper.me'),)
 import sys
 sys.path.append(os.path.join(BASE_DIR, 'libs'))
 sys.path.append(os.path.join(BASE_DIR, 'apps'))
-import libs.secrets
-SECRETS = secrets.getter(os.path.join(BASE_DIR, 'secrets.json'))
+from libs.secrets import *
+SECRETS = getter(os.path.join(BASE_DIR, 'secrets.json'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -40,8 +40,6 @@ if DEBUG is True :
     SECRET_KEY = '4%iv7959!4u!$6!v@i^xp&%h2h$d_hs6%9zyf4%=rm_8fp((n('
     pass
 else:
-    import secrets
-
     from socket import gethostname
     ALLOWED_HOSTS = [
         gethostname(), # For internal OpenShift load balancer security purposes.

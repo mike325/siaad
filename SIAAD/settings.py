@@ -126,7 +126,7 @@ DATABASES = {
 if DEBUG is False:
 # Heroku configurations
     if os.environ.get("DATABASE_URL", "null") != "null":
-        DATABASES['default'] =  dj_database_url.config()
+        #DATABASES['default'] =  dj_database_url.config()
         pass
 # RedHat OpenShift configurations
     elif os.environ.get('OPENSHIFT_MYSQL_DB_USERNAME', "null") != "null":

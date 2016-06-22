@@ -1,6 +1,10 @@
 # -*- encoding: utf-8 -*-
+from __future__ import unicode_literals
+from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 from django.forms import ModelForm
+
+
 from apps.Usuarios.models import Usuario
 from apps.Departamentos.models import Departamento
 

@@ -10,7 +10,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from apps.Departamentos.models import *
 from apps.Historicos.models import *
 
-from SistemaAdministrativo.commons.shortcuts import *
+from SIAAD.commons.shortcuts import *
 
 import copy
 from .fieldsets import *
@@ -98,7 +98,7 @@ def POST_gestion_sistema(request, dpto, area, area_id, ajax):
 							_tabla.objects.filter(**filtros).update(**dato)
 
 							pass
-						except Exception, e:
+						except Exception:
 							errores.append({
 									'tipo': 'Entrada invalida',
 									'desc': '"%s" no es una entrada valida'%valor
@@ -602,7 +602,7 @@ def modifica_curso(request, dpto, nrc, ajax=False):
 							_horario.save()
 							curso.fk_horarios.add(_horario)
 							pass
-						except Exception, e:
+						except Exception:
 							errores.append({
 									'tipo': 'Nuevo horario # ' + clave,
 									'desc': 'Hubo un problema al guardar los datos.<br/><small>Olvidó algun campo?</small>'
@@ -836,7 +836,7 @@ def procesar_csv_contratos(request, dpto):
 				post_ciclo = request.POST.get('ciclo-esc', '')
 				_ciclo = get_object_or_404(Ciclo, id=post_ciclo)
 				pass
-			except Exception, e:
+			except Exception:
 				errores.append({
 						'propiedad': 'Departamento/Ciclo',
 						'descripcion': 'Hubo un error con alguno de los dos campos.'
@@ -865,7 +865,7 @@ def procesar_csv_contratos(request, dpto):
 				datos = archivo_csv.read().replace('\r\n', '\n').replace('\n',';;')
 				# Compatibilidad tanto para fin de linea de Windows como de Linux
 				# (esperemos que nunca ocurra que alguien modifique el archivo en Mac)
-			except Exception, e:
+			except Exception:
 				ciclos = Ciclo.objects.all()
 				errores.append(
 					{
@@ -902,7 +902,7 @@ def procesar_csv_contratos(request, dpto):
 				try:
 					_curso = Curso.objects.get(NRC=fila['nrc'])
 					pass
-				except Exception, e:
+				except Exception:
 					errores.append({
 							'propiedad': 'Contrato',
 							'descripcion': 'El NRC ' + fila['nrc'] + ' no está registrado propiamente en los cursos.<br/>No se pudo agregar el contrato.'
@@ -967,7 +967,7 @@ def procesar_csv_cursos(request, dpto):
 				post_ciclo = request.POST.get('ciclo-esc', '')
 				_ciclo = get_object_or_404(Ciclo, id=post_ciclo)
 				pass
-			except Exception, e:
+			except Exception:
 				errores.append({
 						'propiedad': 'Departamento/Ciclo',
 						'descripcion': 'Hubo un error con alguno de los campos.'
@@ -1003,7 +1003,7 @@ def procesar_csv_cursos(request, dpto):
 				# (esperemos que nunca ocurra que alguien modifique el archivo en Mac)
 
 				pass
-			except Exception, e:
+			except Exception:
 				ciclos = Ciclo.objects.all()
 				errores.append(
 					{
@@ -1161,7 +1161,7 @@ def procesar_csv_cursos(request, dpto):
 					_curso.fk_horarios.add(_horario)
 					_curso.save();
 					pass
-				except Exception, e:
+				except Exception:
 					errores.append({
 							'propiedad': 'Curso',
 							'descripcion': 'El NRC "%s" ya existe en el sistema.'%x['nrc']

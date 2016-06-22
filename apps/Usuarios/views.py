@@ -10,7 +10,7 @@ from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
 
-from SistemaAdministrativo.commons.shortcuts import *
+from SIAAD.commons.shortcuts import *
 
 from apps.Departamentos.models import Departamento
 from apps.Usuarios.models import Usuario, Rol

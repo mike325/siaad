@@ -20,97 +20,97 @@ TEMPLATE_FORM_REPORTE_INC = 'Forms/form-reporte-incidencias.html'
 #Carga de la pagina de incio de las secretarias
 @login_required(login_url='/')
 def inicio_secretaria(request):
-	if request.session['rol'] >= 1:
-		_departamentos = Departamento.objects.all()
+    if request.session['rol'] >= 1:
+        _departamentos = Departamento.objects.all()
 
-		bienvenida = False
+        bienvenida = False
 
-		if request.session['just_logged']:
-			bienvenida = True
-			request.session['just_logged'] = False
+        if request.session['just_logged']:
+            bienvenida = True
+            request.session['just_logged'] = False
 
-		return render(request, 'inicio-secretaria.html', 
-			{
-				'banner': True,
-				'lista_departamentos': _departamentos,
-				'bienvenida': bienvenida
-			})
-	else:
-		return redirect('error403', origen=request.path)
+            return render(request, 'inicio-secretaria.html', 
+            {
+            'banner': True,
+            'lista_departamentos': _departamentos,
+            'bienvenida': bienvenida
+            })
+    else:
+        return redirect('error403', origen=request.path)
 
 #Carga del formulario de incidencias
 @login_required(login_url='/')
 def form_incidencias(request, dpto):
-	if request.session['rol'] >= 1:
-		form_size = 'medium'
-		return render(request, TEMPLATE_FORM_INCIDENCIAS, locals())
-		pass
-	else:
-		return redirect('error403', origen=request.path)
+    if request.session['rol'] >= 1:
+        form_size = 'medium'
+        return render(request, TEMPLATE_FORM_INCIDENCIAS, locals())
+        pass
+    else:
+        return redirect('error403', origen=request.path)
 
 #Formulario para la consulta de las incidencias (por fechas)
 @login_required(login_url='/')
 def ver_incidencias(request, dpto):
-	if request.session['rol'] >= 1:
-		fechaI = str(request.POST.get('fechaIni'))
-		fechaF = str(request.POST.get('fechaFin'))
+    if request.session['rol'] >= 1:
+        fechaI = str(request.POST.get('fechaIni'))
+        fechaF = str(request.POST.get('fechaFin'))
 
-		errores = []
+        errores = []
 
-		try:
-			fI = fechaI.split('-')
-			fechaInicio = date(int(fI[0]), int(fI[1]), int(fI[2]))
-		except:
-			errores.append('Inicio')
+        try:
+            fI = fechaI.split('-')
+            fechaInicio = date(int(fI[0]), int(fI[1]), int(fI[2]))
+        except:
+            errores.append('Inicio')
 
-		try:
-			fF = fechaF.split('-')
-			fechaFin = date(int(fF[0]), int(fF[1]), int(fF[2]))
-		except:
-			errores.append('Fin')
+        try:
+            fF = fechaF.split('-')
+            fechaFin = date(int(fF[0]), int(fF[1]), int(fF[2]))
+        except:
+            errores.append('Fin')
 
-		if not errores:
-			num_mes = int(fechaInicio.month)	
-			mes_ini = meses[(num_mes-1)].upper()
+        if not errores:
+            num_mes = int(fechaInicio.month)	
+            mes_ini = meses[(num_mes-1)].upper()
 
-			num_mes = int(fechaFin.month)
-			mes_fin = meses[(num_mes-1)].upper()
-			
-			extender_info = False
+            num_mes = int(fechaFin.month)
+            mes_fin = meses[(num_mes-1)].upper()
 
-			if mes_ini != mes_fin:
-				extender_info = True
+            extender_info = False
 
-			listaIncidencias = Reporte.objects.filter(
-					fecha__gte = fechaInicio, 
-					fecha__lte = fechaFin
-				).select_related('fk_contrato')
+            if mes_ini != mes_fin:
+                extender_info = True
 
-			if listaIncidencias:
-				return render(request, 'Reportes/incidencias.html',
-				{
-					'fechaI': fechaInicio, 
-					'fechaF': fechaFin, 
-					'mes_ini': mes_ini, 
-					'mes_fin': mes_fin, 
-					'extender_info': extender_info,
-					'listaIncidencias': listaIncidencias,
-					'listaDias': dias_abrev,
-				})
-			else:
-				return render(request, TEMPLATE_SUCCESS, 
-				{
-					'accion': 'Vaya. No existe ningun reporte en esas fechas.',
-				})
+                listaIncidencias = Reporte.objects.filter(
+                    fecha__gte = fechaInicio, 
+                    fecha__lte = fechaFin
+                ).select_related('fk_contrato')
 
-		else:
-			return render(request, TEMPLATE_FORM_INCIDENCIAS,
-				{
-					'errores': errores
-				})
+            if listaIncidencias:
+                return render(request, 'Reportes/incidencias.html',
+                {
+                    'fechaI': fechaInicio, 
+                    'fechaF': fechaFin, 
+                    'mes_ini': mes_ini, 
+                    'mes_fin': mes_fin, 
+                    'extender_info': extender_info,
+                    'listaIncidencias': listaIncidencias,
+                    'listaDias': dias_abrev,
+                })
+            else:
+                return render(request, TEMPLATE_SUCCESS, 
+                {
+                    'accion': 'Vaya. No existe ningun reporte en esas fechas.',
+                })
 
-	else:
-		return redirect('error403', origen=request.path)
+        else:
+            return render(request, TEMPLATE_FORM_INCIDENCIAS,
+            {
+                'errores': errores
+            })
+
+    else:
+        return redirect('error403', origen=request.path)
 
 #Formulario para reportar una incidencia
 @login_required(login_url='/')
@@ -149,65 +149,68 @@ def form_reporte_incidencias(request, dpto):
 #Procesamiento del formulario para aregar el reporte
 @login_required(login_url='/')
 def reporte_incidencias(request, dpto):
-	'''
-	AQUI SE PROCESARA EL FORMULARIO ENVIADO DESDE 
-	form_reporte_incidencias
-	'''
-	if request.session['rol'] >= 1:
-		errores = []
-		options = {}
-		_departamento = get_object_or_404(Departamento, nick=dpto)
-		_curso = get_object_or_404(Curso, NRC=request.POST.get('curso', ''))
+    '''
+    AQUI SE PROCESARA EL FORMULARIO ENVIADO DESDE 
+    form_reporte_incidencias
+    '''
+    if request.session['rol'] >= 1:
+        errores = []
+        options = {}
+        _departamento = get_object_or_404(Departamento, nick=dpto)
+        _curso = get_object_or_404(Curso, NRC=request.POST.get('curso', ''))
 
-		try:
-			_contrato = Contrato.objects.filter(fk_curso__NRC=_curso).last()
-			pass
-		except Exception, e:
-			_contrato = None
-			pass
+        try:
+            _contrato = Contrato.objects.filter(fk_curso__NRC=_curso).last()
+            pass
+        except Exception:
+            _contrato = None
+            pass
 
-		comentario = str(request.POST.get('comentario', ''))
+        comentario = str(request.POST.get('comentario', ''))
 
-		if _contrato and 'horasf' in request.POST:
-			reporte = Reporte(
-					fk_contrato=_contrato,
-					fk_depto=_departamento,
-					horasFalta=request.POST.get('horasf', ''),
-					comentario=comentario
-				)
+        if _contrato and 'horasf' in request.POST:
+            reporte = Reporte(
+                        fk_contrato=_contrato,
+                        fk_depto=_departamento,
+                        horasFalta=request.POST.get('horasf', ''),
+                        comentario=comentario
+                    )
 
-			try:
-				reporte.save()
-				pass
-			except Exception, e:
-				return render(request, TEMPLATE_SUCCESS, 
-					{
-						'accion': 'Ocurrio un error al guardar el reporte.'
-					})
-				pass
+            try:
+                reporte.save()
+                pass
+            except Exception:
+                return render(request, TEMPLATE_SUCCESS, 
+                {
+                    'accion': 'Ocurrio un error al guardar el reporte.'
+                })
+                pass
 
- 			registroReporte = Registro.creacion(
- 					request.session['usuario']['nick'], 
-					'Se creo el reporte de incidencia ['
-						+ str(reporte)
-						+' (' + reporte.fk_contrato.fk_curso.fk_profesor.codigo_udg + ')]', 
-					str(reporte), 'Reportes', _departamento
-				)
+            registroReporte = Registro.creacion(
+                request.session['usuario']['nick'], 
+                'Se creo el reporte de incidencia ['
+                    + str(reporte)
+                    +' (' + reporte.fk_contrato.fk_curso.fk_profesor.codigo_udg + ')]', 
+                str(reporte), 'Reportes', _departamento
+            )
 
-			registroReporte.save()
-			pass
-		else:
-			return render(request, TEMPLATE_SUCCESS,
-				{
-					'accion': 'Error'
-				})
+            registroReporte.save()
+            pass
+        else:
+            return render(request, TEMPLATE_SUCCESS,
+            {
+            'accion': 'Error'
+            })
 
-		return render(request, TEMPLATE_SUCCESS, 
-			{
-				'accion': 'Hecho. Se ha realizado el reporte.'
-			})
-		pass
+        return render(request, TEMPLATE_SUCCESS, 
+        {
+            'accion': 'Hecho. Se ha realizado el reporte.'
+        })
+        pass
+    else:
+        return redirect('error403', origen=request.path)
 
+"""
 		# _departamento = get_object_or_404(Departamento, nick=dpto)
 		# listaProf = Profesor.objects.order_by('apellido')
 		# listaMaterias = Curso.objects.all()
@@ -272,5 +275,4 @@ def reporte_incidencias(request, dpto):
 		# 			'profesores': listaProf,
 		# 			'materias': listaMaterias,
 		# 		})
-	else:
-		return redirect('error403', origen=request.path)
+"""

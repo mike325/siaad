@@ -1,1 +1,1 @@
-web: gunicorn SistemaAdministrativo.wsgi --log-file -
+web: gunicorn SIAAD.wsgi --log-file -

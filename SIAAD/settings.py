@@ -45,6 +45,7 @@ else:
     ALLOWED_HOSTS = [
         gethostname(), # For internal OpenShift load balancer security purposes.
         'siaad.herokuapp.com',
+        'siaad.prodeveloper.me',
         #'example.com', # First DNS alias (set up in the app)
         #'www.example.com', # Second DNS alias (set up in the app)
     ]

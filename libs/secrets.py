@@ -1,7 +1,7 @@
 import json
 from unipath import Path
 
-BASE_DIR = Path(__file__).ancestor(2)
+BASE_DIR = Path(__file__).ancestor(4)
 
 __secrets = {
     'secret_key': '4%iv7959!4u!$6!v@i^xp&%h2h$d_hs6%9zyf4%=rm_8fp((n(',
@@ -32,7 +32,7 @@ def generator_dev():
     __secrets['secret_key'] = get_random_string(50, chars)
     __secrets["db_engine"] = 'django.db.backends.sqlite3'
 
-    with open(BASE_DIR.child('secrets.json'), "w") as ACCESS:
+    with open(BASE_DIR.child('data').child('secrets.json'), "w") as ACCESS:
         json.dump(__secrets, ACCESS)
         pass
     return __secrets

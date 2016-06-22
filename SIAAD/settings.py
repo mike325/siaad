@@ -128,7 +128,9 @@ DATABASES = {
 if DEBUG is False:
     # Heroku configurations
     if os.environ.get("DATABASE_URL", "null") != "null":
-        DATABASES['default'] =  dj_database_url.config()
+        # sqlite uses the dyno space which is more than the
+        # postgresql free instance ( 7.2 mb vs ~230 mb )
+        # DATABASES['default'] =  dj_database_url.config()
         pass
     # RedHat OpenShift configurations
     elif os.environ.get('OPENSHIFT_MYSQL_DB_USERNAME', "null") != "null":

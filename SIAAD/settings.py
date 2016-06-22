@@ -18,7 +18,7 @@ WSGI_DIR = os.path.dirname(BASE_DIR)
 REPO_DIR = os.path.dirname(WSGI_DIR)
 DATA_DIR = os.environ.get('OPENSHIFT_DATA_DIR', BASE_DIR)
 
-DEBUG = os.environ.get('DEBUG') == 'True'
+DEBUG = False 
 
 ADMINS = (('Miguel Ochoa', 'siaad.cucei@prodeveloper.me'),)
 
@@ -166,13 +166,9 @@ if DEBUG is False:
 
 LANGUAGE_CODE = 'es-mx'
 TIME_ZONE = 'America/Mexico_City'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/

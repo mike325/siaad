@@ -1,0 +1,99 @@
+/* Fix (probablemente no el mas eficiente)
+ * para los estilos de la barra lateral */
+
+/*
+	TODO:
+		+ Cambiar los estilos por defecto de foundation y mezclarlos
+		  con los originales (de modo que no se tenga que estar usando
+		  "!important" todo el tiempo.
+
+		+ Limpieza de estilos.
+*/
+
+	/* INICIO >> Reset para los estilos del acordeon */
+	.accordion * 
+	{ 
+		font-size: 14px !important; 
+	}
+	.accordion li
+	{
+		background: transparent !important;
+		margin: 0 !important; padding: 0 !important;
+	}
+	.accordion a
+	{
+		background: transparent !important;
+		margin: 0 !important; padding: 0 !important;
+	}
+	/* FIN >> Reset para los estilos del acordeon */
+
+	.accordion .accordion-navigation
+	{
+		padding-left: 10px !important;
+		border-left: 4px solid #B2B2B2;
+		background-color: rgb(231, 231, 231);
+		background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIUlEQVQIW2NkQAL////fzAjjgzmMjL5gARgHxGZE5oAEAA0GD7VMeqp7AAAAAElFTkSuQmCC) !important;
+	}
+
+	.accordion .accordion-navigation > .content
+	{
+		margin: 0 !important;
+	}
+
+	.accordion .accordion-navigation > a
+	{
+		padding: 6px 18px !important;
+	}
+
+	.accordion .accordion-navigation .content a
+	{
+		position: relative;
+	}
+
+	.accordion .accordion-navigation .content a:hover
+	{
+		background-color: #F5F5F5 !important;
+	}
+
+	.accordion .accordion-navigation .content a:before
+	{
+		visibility: hidden;
+
+		content: "";
+		position: absolute;
+			bottom: 0;
+			left: 0;
+			
+		width: 0;
+		height: 1px;
+
+		transition: all 0.3s ease-in-out 0s;
+		-webkit-transition: all 0.3s ease-in-out 0s;
+		
+		background-color: #B2B2B2;
+	}
+
+	.accordion .accordion-navigation .content a:hover:before
+	{
+		width: 100%;
+		visibility: visible;
+	}
+
+	.accordion .content
+	{
+		background-color: #000;
+	}
+
+	.accordion .content > a 
+	{
+		padding: 6px 12px !important;
+		/*padding-left: 32px !important;*/
+		background-color: #B2B2B2 !important;
+		color: #FFFFFF;
+		border-left: 6px solid #717171;
+	}
+
+	.accordion .content > a:hover
+	{
+		color: #3e3e3e !important;
+	}

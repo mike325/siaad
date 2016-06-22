@@ -1,0 +1,50 @@
+/* Hoja de estilos para mejorar 
+ * la vista de los formatos imprimibles */
+
+@media print {
+	@page {size: landscape}
+	
+	table
+	{
+		margin: 0;
+		padding: 0; 
+		border-collapse: collapse !important;
+		border: 1px solid #E3E3E3 !important;
+	}
+
+	thead
+	{
+	    /* 
+    	TODO: 
+    		+ fix background-color Firefox/IE
+		*/
+
+	    background-color: #e9eaed !important;
+	    border-bottom: 1px solid #E3E3E3 !important;
+	    -webkit-print-color-adjust: exact; /* fix Chrome/Safari */
+	}
+
+	td
+	{
+		border-bottom: 1px solid #E3E3E3 !important;
+	}
+
+	td.row-materia { font-size: 12px; }
+	td.row-nombre, td.row-nombreprof { font-size: 12px; }
+
+	div.full-width-container
+	{
+		padding: 0;
+		border: 0px none #FFF;
+	}
+
+	div.full-width-container table
+	{
+		margin-bottom: 12px !important;
+	}
+
+	div.full-width-container table td
+	{
+		padding: 3px 12px !important;
+	}
+}

@@ -29,6 +29,7 @@ ALLOWED_HOSTS = []
 SECRET_KEY = None
 SECRETS = None 
 
+ADMINS = (('Miguel Ochoa', 'mike.test@prodeveloper.me'),)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 if DEBUG is True :

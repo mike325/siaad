@@ -5,7 +5,7 @@
 secrets.json
 
 # Pycharm config
-idea/
+.idea/
 
 #
 # Byte-compiled / optimized / DLL files

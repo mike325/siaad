@@ -11,44 +11,15 @@ notifications:
     on_failure: always
 
 services: 
-  - mysql
+    - mysql
+    - postgres
 
 env:
-  - DJANGO=1.8.4 DB=mysql
-  - DJANGO=1.9 DB=mysql
-  - DJANGO=1.8.4 DB=postgres
-  - DJANGO=1.9 DB=postgres
-  #- DJANGO=1.9
-
-matrix:
-  - pytho: "2.7"
-    env: DJANGO=1.8.4 DB=mysql
-  - pytho: "3.3"
-    env: DJANGO=1.8.4 DB=mysql
-  - pytho: "3.5"
-    env: DJANGO=1.8.4 DB=mysql
-
-  - pytho: "2.7"
-    env: DJANGO=1.9 DB=mysql
-  - pytho: "3.3"
-    env: DJANGO=1.9 DB=mysql
-  - pytho: "3.5"
-    env: DJANGO=1.9 DB=mysql
-
-  - pytho: "2.7"
-    env: DJANGO=1.8.4 DB=postgres
-  - pytho: "3.3"
-    env: DJANGO=1.8.4 DB=postgres
-  - pytho: "3.5"
-    env: DJANGO=1.8.4 DB=postgres
-
-  - pytho: "2.7"
-    env: DJANGO=1.9 DB=postgres
-  - pytho: "3.3"
-    env: DJANGO=1.9 DB=postgres
-  - pytho: "3.5"
-    env: DJANGO=1.9 DB=postgres
-
+    - DJANGO=1.8.4 DB=postgres
+    - DJANGO=1.8.4 DB=postgres
+    - DJANGO=1.9 DB=mysql
+    - DJANGO=1.9 DB=mysql
+      
 before_install:
   #- export DEBUG=true
   #- export PYTHONPATH=$HOME/builds/your_github_username/your_repo

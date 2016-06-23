@@ -18,13 +18,13 @@ DJ_PROJECT_DIR = os.path.dirname(__file__)
 PROJECT_ROOT = os.path.dirname(__file__)
 BASE_DIR = Path(__file__).ancestor(2)
 
-print (" Base dir {0}".format(BASE_DIR))
+#print (" Base dir {0}".format(BASE_DIR))
 
 #BASE_DIR = os.path.dirname(DJ_PROJECT_DIR)
 WSGI_DIR = None
 REPO_DIR = None
 
-print("Static {0}".format(BASE_DIR.ancestor(1).child("static")))
+#print("Static {0}".format(BASE_DIR.ancestor(1).child("static")))
 
 if os.environ.get('OPENSHIFT_DATA_DIR', "null") != "null":
     WSGI_DIR = BASE_DIR.ancestor(1)
@@ -248,7 +248,7 @@ if os.environ.get('OPENSHIFT_DATA_DIR', "null") != "null":
     STATICFILES_DIRS += os.path.join(BASE_DIR, 'static')
     pass
 
-print ("Padre static {0}".format(STATIC_ROOT))
+#print ("Padre static {0}".format(STATIC_ROOT))
 
 #STATICFILES_DIRS = (BASE_DIR.child('static'),)
 #STATIC_ROOT = 'staticfiles'

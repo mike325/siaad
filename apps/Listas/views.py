@@ -14,7 +14,7 @@ from apps.Listas.models import *
 
 import re, math
 
-from SIAAD.commons.shortcuts import get_ciclo_vigente
+from siaad.commons.shortcuts import get_ciclo_vigente
 
 '''
 FIX:

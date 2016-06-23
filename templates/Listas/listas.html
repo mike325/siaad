@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block poshead %}
-    {% load staticfiles %}
+    {% load static %}
     <link rel="stylesheet" href="{% static 'css/print/formatos.css' %}" type="text/css" media="print" />
 
     <script type="text/javascript">
@@ -125,7 +125,7 @@
                             <tr class="especialHead">
                                 {# <th class="hide-for-print"></th> #}
                                 <th colspan="2">
-                                    {% load staticfiles %}
+                                    {% load static %}
                                     <div style="width: 100px; height: 100%;">
                                         <img src="{% static 'img/udglogo.jpg' %}">
                                     </div>

@@ -8,7 +8,7 @@ from django.db.models import Q
 import re
 
 from apps.Departamentos.models import *
-from SIAAD.commons.shortcuts import *
+from siaad.commons.shortcuts import *
 
 TEMPLATE_HISTORICOS = 'Historicos/historicos.html'
 

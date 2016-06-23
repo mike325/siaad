@@ -10,7 +10,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from apps.Departamentos.models import *
 from apps.Historicos.models import *
 
-from SIAAD.commons.shortcuts import *
+from siaad.commons.shortcuts import *
 
 import copy
 from .fieldsets import *

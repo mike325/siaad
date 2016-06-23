@@ -164,7 +164,7 @@ if 'TRAVIS' in os.environ:
             'default': {
                 'ENGINE':  'django.db.backends.mysql',
                 'NAME': 'travis_ci_test', 
-                'USER': 'travis',
+                'USER': 'root',
                 'PASSWORD': '',
                 'HOST': 'localhost',
             }

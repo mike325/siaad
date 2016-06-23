@@ -32,7 +32,7 @@ install:
 
 before_script:
   #- mysql -e 'create database travis;' -u travis
-    - mysql -e 'create database travis_ci_test;' -u travis
+    - mysql -e "create database IF NOT EXISTS test;" -uroot
     - psql -c 'create database travis_ci_test;' -U postgres
 
 script:

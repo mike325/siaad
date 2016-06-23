@@ -214,19 +214,19 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_URL = '/static/'
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'apps'),
+)
+
 
 if os.environ.get('OPENSHIFT_DATA_DIR', "null") != "null":
     STATIC_ROOT = os.path.join(BASE_DIR, '../static')
+    STATICFILES_DIRS += os.path.join(BASE_DIR, 'static')
     pass
 
 print ("Padre static {0}".format(STATIC_ROOT))
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-    os.path.join(BASE_DIR, 'apps'),
-)
 #STATICFILES_DIRS = (BASE_DIR.child('static'),)
 #STATIC_ROOT = 'staticfiles'
 

@@ -17,6 +17,11 @@ __pycache__/
 # C extensions
 *.so
 
+# tmp
+*~
+*.sw
+*.swp
+
 # Distribution / packaging
 .Python
 env/

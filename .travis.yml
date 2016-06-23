@@ -12,11 +12,11 @@ notifications:
 
 services: 
     - mysql
-    - postgres
+    - postgresql
 
 env:
-    - DJANGO=1.8.4 DB=postgres
-    - DJANGO=1.8.4 DB=postgres
+    - DJANGO=1.8.4 DB=postgresql
+    - DJANGO=1.8.4 DB=postgresql
     - DJANGO=1.9 DB=mysql
     - DJANGO=1.9 DB=mysql
       

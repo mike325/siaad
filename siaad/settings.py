@@ -163,7 +163,7 @@ if 'TRAVIS' in os.environ:
         DATABASES = {
             'default': {
                 'ENGINE':  'django.db.backends.mysql',
-                'NAME': 'travis', 
+                'NAME': 'travis_ci_test', 
                 'USER': 'travis',
                 'PASSWORD': '',
                 'HOST': 'localhost',
@@ -174,8 +174,8 @@ if 'TRAVIS' in os.environ:
         DATABASES = {
             'default': {
                 'ENGINE':  'django.db.backends.postgresql_psycopg2',
-                'NAME': 'travis', 
-                'USER': 'travis',
+                'NAME': 'travis_ci_test', 
+                'USER': 'postgres',
                 'PASSWORD': '',
                 'HOST': 'localhost',
             }

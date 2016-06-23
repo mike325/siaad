@@ -32,9 +32,9 @@ install:
 
 before_script:
   #- mysql -e 'create database travis;' -u travis
-  - mysql -e 'create database travis;' -u travis
-  - psql -c 'create database travis;' -U travis
+    - mysql -e 'create database travis_ci_test;' -u travis
+    - psql -c 'create database travis_ci_test;' -U postgres
 
 script:
-- python manage.py makemigrations --noinput
-- python manage.py migrate --noinput
+    - python manage.py makemigrations --noinput
+    - python manage.py migrate --noinput

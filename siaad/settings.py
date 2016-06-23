@@ -24,11 +24,15 @@ print (" Base dir {0}".format(BASE_DIR))
 WSGI_DIR = None
 REPO_DIR = None
 
-if BASE_DIR.ancestor(1).child("static") != None:
+print("Static {0}".format(BASE_DIR.ancestor(1).child("static")))
+
+if os.environ.get('OPENSHIFT_DATA_DIR', "null") != "null":
+    print("Existe")
     WSGI_DIR = BASE_DIR.ancestor(1)
     REPO_DIR = WSGI_DIR
     pass
 else:
+    print("No Existe")
     WSGI_DIR = BASE_DIR
     REPO_DIR = WSGI_DIR
     pass
@@ -45,7 +49,7 @@ if DATA_DIR != BASE_DIR :
 
 sys.path.append(os.path.join(BASE_DIR, 'apps'))
 
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = []
 SECRET_KEY = None
 SECRETS = None 
@@ -213,9 +217,11 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-if os.path.join(BASE_DIR, '../static') != None:
+if os.environ.get('OPENSHIFT_DATA_DIR', "null") != "null":
     STATIC_ROOT = os.path.join(BASE_DIR, '../static')
     pass
+
+print ("Padre static {0}".format(STATIC_ROOT))
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),

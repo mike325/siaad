@@ -49,7 +49,7 @@ if DATA_DIR != BASE_DIR :
 
 sys.path.append(os.path.join(BASE_DIR, 'apps'))
 
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = []
 SECRET_KEY = None
 SECRETS = None 

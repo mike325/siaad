@@ -27,12 +27,10 @@ REPO_DIR = None
 print("Static {0}".format(BASE_DIR.ancestor(1).child("static")))
 
 if os.environ.get('OPENSHIFT_DATA_DIR', "null") != "null":
-    print("Existe")
     WSGI_DIR = BASE_DIR.ancestor(1)
     REPO_DIR = WSGI_DIR
     pass
 else:
-    print("No Existe")
     WSGI_DIR = BASE_DIR
     REPO_DIR = WSGI_DIR
     pass
@@ -160,7 +158,31 @@ DATABASES = {
     }
 }
 
-if DEBUG is False:
+if 'TRAVIS' in os.environ:
+    if os.environ.get('DB') == "mysql":
+        DATABASES = {
+            'default': {
+                'ENGINE':  'django.db.backends.mysql',
+                'NAME': 'travis', 
+                'USER': 'travis',
+                'PASSWORD': '',
+                'HOST': 'localhost',
+            }
+        }
+        pass
+    elif os.environ.get('DB') == "postgres":
+        DATABASES = {
+            'default': {
+                'ENGINE':  'django.db.backends.postgresql_psycopg2',
+                'NAME': 'travis', 
+                'USER': 'travis',
+                'PASSWORD': '',
+                'HOST': 'localhost',
+            }
+        }
+        pass
+    pass
+elif DEBUG is False:
 # Heroku configurations
     #if os.environ.get("DATABASE_URL", "null") != "null":
         #DATABASES['default'] =  dj_database_url.config()
@@ -193,6 +215,7 @@ if DEBUG is False:
         pass
 # Else keep the default sqlite configurations
 pass
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/

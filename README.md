@@ -1,4 +1,4 @@
-# Sistema Administrativo
+# Sistema Administrativo      [![Build Status](https://travis-ci.org/Mike325/siaad.svg?branch=master)](https://travis-ci.org/Mike325/siaad)
 El sistema administrativo permite llevar un registro y un histórico asociado mediante la automatización del alta de asistencias de los profesores de la división de electrónica y computación del CUCEI.
 
 ## Requisitos

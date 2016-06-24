@@ -37,11 +37,11 @@ install:
   - pip install django==$DJANGO --quiet
   #- pip install psycopg2 --quiet
 
-before_script:
+#before_script:
   #- mysql -e 'create database travis;' -u travis
-    - if[[ "$DB" = "mysql" ]]; then mysql -e "create database IF NOT EXISTS test;" -uroot; fi
-    - if[[ "$DB" = "postgresql" ]]; then psql -c 'create database travis_ci_test;' -U postgres; fi
 
 script:
+    - if[[ "$DB" = "mysql" ]]; then mysql -e "create database IF NOT EXISTS test;" -uroot; fi
+    - if[[ "$DB" = "postgresql" ]]; then psql -c 'create database travis_ci_test;' -U postgres; fi
     - python manage.py makemigrations --noinput
     - python manage.py migrate --noinput

@@ -162,7 +162,7 @@ if 'TRAVIS' in os.environ:
     if os.environ.get('DB') == "mysql":
         DATABASES = {
             'default': {
-                'ENGINE':  'django.db.backends.mysql',
+                'ENGINE': 'django.db.backends.mysql',
                 'NAME': 'travis_ci_test', 
                 'USER': 'root',
                 'PASSWORD': '',

@@ -1,1 +1,1 @@
-web: gunicorn SIAAD.wsgi --log-file -
+web: gunicorn siaad.wsgi --log-file -

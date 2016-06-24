@@ -10,9 +10,9 @@ notifications:
     on_success: never # default: change
     on_failure: always
 
-#services: 
-#    - mysql
-#    - postgresql
+services: 
+    - mysql
+    - postgresql
 
 env:
     - DJANGO=1.8.4 DB=mysql

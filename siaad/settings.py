@@ -170,7 +170,7 @@ if 'TRAVIS' in os.environ:
             }
         }
         pass
-    elif os.environ.get('DB') == "postgres":
+    elif os.environ.get('DB') == "postgresql":
         DATABASES = {
             'default': {
                 'ENGINE':  'django.db.backends.postgresql_psycopg2',

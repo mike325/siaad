@@ -41,6 +41,8 @@ before_script:
   #- mysql -e 'create database travis;' -u travis
     - sh -c "if [ '$DB' = 'postgresql' ]; then psql -c 'DROP DATABASE IF EXISTS travis_ci_test;' -U postgres; fi"
     - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'DROP DATABASE IF EXISTS travis_ci_test;' -uroot; fi"
+    - sh -c "if [ '$DB' = 'postgresql' ]; then psql -c 'create database travis_ci_test;' -U postgres; fi"
+    - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database travis_ci_test;' -uroot; fi"
 
 script:
     - python manage.py makemigrations --noinput
